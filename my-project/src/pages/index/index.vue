@@ -1,25 +1,20 @@
 <template>
-  <div class="container" @click="clickHandle('test click', $event)">
+  <div class="container">
 
     <div class="userinfo" @click="bindViewTap">
-      <!--  <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" />-->
+
+      <div style="width: 120rpx" v-if="userInfo.avatarUrl">
+        <img style="width: 120rpx ;height:120rpx" class="userinfo-avatar" :src="userInfo.avatarUrl"/>
+      </div>
+      <button v-else open-type="getUserInfo"
+              @getuserinfo="bindGetUserInfo"
+      >授权登录
+      </button>
       <div class="userinfo-nickname">
-        <div>{{backendMsg}}</div>
         <card :text="userInfo.nickName"></card>
       </div>
     </div>
-    <!--   <button   open-type="getUserInfo"
-         bindgetuserinfo="bindGetUserInfo"
-       >授权登录</button>-->
-    <div class="usermotto">
-      <div class="user-motto">
-        <card :text="motto"></card>
-      </div>
-    </div>
-    <form class="form-container">
-      <input type="text" class="form-control" v-model="motto" placeholder="v-model"/>
-      <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy"/>
-    </form>
+
     <a href="/pages/broadcast/main" class="counter">去往管理员页面</a>
     <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
   </div>
@@ -28,7 +23,7 @@
 <script>
   import card from '@/components/card'
   import testImg from '@/img/test.png'
-
+  import config from '@/config.js';
   export default {
     data() {
       return {
@@ -44,83 +39,73 @@
     },
     mounted() {
 
-      wx.cloud.callFunction({
-        name: 'auth',
-      }).then((res) => {
-        console.log(res);
+    },
 
-      })
-
-    }
-    ,
     methods: {
       bindViewTap() {
-        const url = '../logs/main'
+        const url = '' +
+          '../logs/main'
         wx.navigateTo({url})
       },
-      getUserInfo() {
-        // 调用登录接口
+      bindGetUserInfo(e) {
+        console.log(e, 'user info');
+        let that = this;
+        this.userInfo = e.target.userInfo;
         wx.login({
-          success: () => {
-            wx.getUserInfo({
-              success: (res) => {
-                console.log(res, 111111111);
-                this.userInfo = res.userInfo
+          success(res) {
+            // 从login取 code 传后台.
+            let code = res.code;
+            wx.request({
+              url:  config.auth,
+              data: {
+                ...e.target.userInfo,
+                code: code
+              },
+              success(res) {
+                that.backendMsg = res.data
+                if (res.data.userType === 1) {
+                  wx.navigateTo({url: '/pages/broadcast/main'})
+                } else {
+                  wx.navigateTo({url: '/pages/counter/main'})
+                }
               }
-            })
-          },
-          complete() {
-            wx.getUserInfo({
-              complete(res) {
-                console.log(res, 2222222222222);
-              }
-            })
-
+            })// end request
           }
         })
-      },
-      clickHandle(msg, ev) {
-      },
-      bindGetUserInfo(e) {
-
       }
     },
 
     created() {
       // 调用应用实例的方法获取全局数据
-      let that = this;
-      wx.login({
-        success(res){
-         console.log(res,'from login');
-         // 从login取 code 传后台.
-         let code=res.code;
-          wx.getSetting({
-            success: function (res) {
-              if (res.authSetting['scope.userInfo']) {
-                wx.getUserInfo({
-                  success: function (res) {
-                    console.log(res.userInfo, 333333333)
-                    that.userInfo = res.userInfo;
-                    wx.request({
-                      url: 'https://localhost:1443/',
-                      data: {
-                        ...res.userInfo,
-                      code:code
-                      },
-                      success(res) {
-                        that.backendMsg = res.data
-                      }
-                    })// end request
-                  }// end success
-                })// end wxGet
-              }
+      let that = this
+      wx.getUserInfo({
+        success: function (res) {
+          let userInfo = res.userInfo;
+          that.userInfo = res.userInfo
+          wx.login({
+            success(res) {
+              console.log(res, 'from login')
+              // 从login取 code 传后台.
+              let code = res.code;
+              wx.request({
+                url:  config.auth,
+                data: {
+                  ...userInfo,
+                  code: code
+                },
+                success(res) {
+                  if (res.data.userType === 1) {
+                    wx.navigateTo({url: '/pages/broadcast/main'})
+                  } else {
+                    wx.navigateTo({url: '/pages/counter/main'})
+                  }
+
+                }
+              })// end request
             }
           })
-
-
-        }})
-
-
+        }// end success
+      })// end wxGet
 
     }
   }
@@ -128,7 +113,7 @@
 
 <style scoped>
   .userinfo {
-    display: flex;
+
     flex-direction: column;
     align-items: center;
   }

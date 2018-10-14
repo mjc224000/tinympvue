@@ -16,9 +16,9 @@ const store = new Vuex.Store({
     },
     decrement: (state) => {
       let {count} = state
-      state.count = Math.max(0,parseInt(count) - 1)
+      state.count = Math.max(0, parseInt(count) - 1)
     },
-    updateNumber(state, stark) {
+    updateNumber (state, stark) {
       state.count = stark
     }
   }
