@@ -1,12 +1,8 @@
 <template>
   <div class="counter-warp">
-    <p> 当前号码为：{{ count }}，请位于此号码前的司机</p>
+    <p> 当前号码为：{{ count }}，请位于此号码前的司机进入园区。</p>
     <div class="text"> {{ count }}</div>
     <a href="/pages/index/main" class="home">去往首页</a>
-
-    <p class="top">
-      当前排队号为{{ count }}，请处于该排队号之前的司机进入园区。
-    </p>
   </div>
 </template>
 
