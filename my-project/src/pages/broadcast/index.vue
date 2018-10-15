@@ -9,8 +9,10 @@
         <div class="button-wrap">
           <textarea class="border" cols="20" rows="5"> </textarea>
         </div>
+        <form action=""></form>
         <div class="button-wrap">
-          <input size="30" class="small text" type="number" v-model="counter" @confirm="handleConfirm"/>
+
+          <input size="30" class="small text" type="text" v-model="counter" @confirm="handleConfirm"/>
           <button class="small" v-on:click="increment">+</button>
           <button class="small" v-on:click="decrement">-</button>
         </div>
@@ -22,20 +24,42 @@
 </template>
 
 <script>
-  import store from './store'
+  import store from './store';
+  import config from '@/config.js';
+
   export default {
     methods: {
       increment() {
-        store.commit('increment')
+        store.commit('increment');
+
       },
       decrement() {
         store.commit('decrement')
       },
       handleConfirm(e) {
-        store.commit('updateNumber', e.target.value);
+
+        wx.request({
+          url: config.update,
+          data: {
+            updateNumber: e.target.value
+          },
+          success(res) {
+            if (res.data === 'ok') {
+              store.commit('updateNumber', e.target.value)
+            }
+          }
+        })
+      },
+      created() {
+        wx.request({
+          url: config.currentNumber,
+          success(res) {
+            store.commit('updateNumber', res.data)
+          }
+        })
       }
-    }
-    ,
+    },
+
     data: {
       test: ''
     },
