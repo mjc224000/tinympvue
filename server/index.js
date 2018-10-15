@@ -23,6 +23,7 @@ app.get('/auth', auth);
 app.get('/api/users', showUsers);
 app.get('/update', function (req, res) {
     currentNumber = req.query.updateNumber;
+    console.log(req.query);
     res.send('ok');
 });
 app.get('/currentNumber', function (req, res) {
