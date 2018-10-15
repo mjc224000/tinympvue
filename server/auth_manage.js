@@ -35,6 +35,7 @@ function showUsers(req, res) {
     person.find({}, function (err, persons) {
         if (err) return
         res.json({list: persons})
+
     })
 }
 
@@ -71,8 +72,7 @@ function auth(req, res) {
                     })
                 } else {
                     user.getRole(function (err, doc) {
-                        console.log(doc.name, 'user 的 role');
-                        let name = doc.name;
+                        let name = doc && doc.name;
                         if (name === 'admin') {
                             userType = 1;
                             res.json({userType});
