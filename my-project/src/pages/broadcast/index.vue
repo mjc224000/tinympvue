@@ -12,11 +12,12 @@
         <form action=""></form>
         <div class="button-wrap">
 
-          <input size="30" class="small text" type="text" v-model="counter" @confirm="handleConfirm"/>
+          <input size="30" class="small text" type="text" placeholder="输入数字" v-model="counter"
+                 @confirm="handleConfirm"/>
           <button class="small" v-on:click="increment">+</button>
           <button class="small" v-on:click="decrement">-</button>
         </div>
-        <button class="button" @click="increment"> 发送消息</button>
+<!--    <button class="button" @click="increment"> 发送消息</button>-->
       </div>
     </div>
   </div>
@@ -27,39 +28,56 @@
   import store from './store';
   import config from '@/config.js';
 
+  function asyncReq(value) {
+    return new Promise(function (resolve) {
+      wx.request({
+        url: config.update,
+        data: {
+          updateNumber: value
+        },
+        success(res) {
+          if (res.data === 'ok') {
+            resolve(res);
+          }
+        }
+      })
+    })
+  }
+
   export default {
     methods: {
       increment() {
-        store.commit('increment');
-
-      },
-      decrement() {
-        store.commit('decrement')
-      },
-      handleConfirm(e) {
-
-        wx.request({
-          url: config.update,
-          data: {
-            updateNumber: e.target.value
-          },
-          success(res) {
-            if (res.data === 'ok') {
-              store.commit('updateNumber', e.target.value)
-            }
-          }
-        })
-      },
-      created() {
-        wx.request({
-          url: config.currentNumber,
-          success(res) {
-            store.commit('updateNumber', res.data)
-          }
+        let value = store.state.count + 1;
+        asyncReq(value).then(() => {
+          store.commit('increment');
         })
       }
-    },
+      ,
+      decrement() {
+        let value = store.state.count - 1;
+        asyncReq(value).then(() => {
+          store.commit('decrement')
+        })
 
+      },
+      handleConfirm(e) {
+        let reg = /[^0-9]/;
+        if (!reg.test(e.target.value)) {
+          asyncReq(e.target.value).then(function () {
+            store.commit('updateNumber', e.target.value)
+          })
+        }
+
+      },
+    },
+    created() {
+      wx.request({
+        url: config.currentNumber,
+        success(res) {
+          store.commit('updateNumber', res.data)
+        }
+      })
+    },
     data: {
       test: ''
     },
