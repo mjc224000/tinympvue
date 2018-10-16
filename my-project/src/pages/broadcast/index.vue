@@ -6,9 +6,9 @@
     </p>
     <div>
       <div class="bottom">
-        <div class="button-wrap">
+        <!--<div class="button-wrap">
           <textarea class="border" cols="20" rows="5"> </textarea>
-        </div>
+        </div>-->
         <form action=""></form>
         <div class="button-wrap">
 
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import store from './store';
+  import store from '@/pages/store';
   import config from '@/config.js';
 
   function asyncReq(value) {

@@ -104,6 +104,14 @@ class BackEndTable extends Component {
                         key="openid"
                     />
                     <Column
+                        title="角色"
+                        dataIndex="role_roleid"
+                        key="role_roleid"
+                        render={(text,record)=>{
+                            return (<span> {text===1?'管理员':'无'}</span>)
+                        }}
+                    />
+                    <Column
                         title="Action"
                         key="action"
                         render={(text, record) => {

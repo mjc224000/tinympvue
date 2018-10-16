@@ -3,7 +3,7 @@
 
     <div class="userinfo" @click="bindViewTap">
 
-      <div style="width: 120rpx" v-if="userInfo.avatarUrl">
+      <div style="width: 120rpx" v-if=" userInfo && userInfo.avatarUrl">
         <img style="width: 120rpx ;height:120rpx" class="userinfo-avatar" :src="userInfo.avatarUrl"/>
       </div>
       <button v-else open-type="getUserInfo"
@@ -15,21 +15,20 @@
       </div>
     </div>
 
-    <a href="/pages/broadcast/main" class="counter">去往管理员页面</a>
-    <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
+      <a v-if="isAuth"  href="/pages/broadcast/main" class="counter">去往管理员页面</a>
+    <a href="/pages/counter/main" class="counter">查看当前牌号</a>
   </div>
 </template>
 
 <script>
   import card from '@/components/card'
-  import testImg from '@/img/test.png'
   import config from '@/config.js';
+ import store from '@/pages/store'
   export default {
     data() {
       return {
         motto: 'Hello World',
         userInfo: {},
-        testImg,
         backendMsg: ''
       }
     },
@@ -40,6 +39,12 @@
     mounted() {
 
     },
+  computed:{
+     isAuth(){
+       return store.state.auth;
+     }
+  }
+  ,
 
     methods: {
       bindViewTap() {
@@ -56,7 +61,7 @@
             // 从login取 code 传后台.
             let code = res.code;
             wx.request({
-              url:  config.auth,
+              url: config.auth,
               data: {
                 ...e.target.userInfo,
                 code: code
@@ -64,6 +69,7 @@
               success(res) {
                 that.backendMsg = res.data
                 if (res.data.userType === 1) {
+                  store.commit('auth');
                   wx.navigateTo({url: '/pages/broadcast/main'})
                 } else {
                   wx.navigateTo({url: '/pages/counter/main'})
@@ -88,13 +94,14 @@
               // 从login取 code 传后台.
               let code = res.code;
               wx.request({
-                url:  config.auth,
+                url: config.auth,
                 data: {
                   ...userInfo,
                   code: code
                 },
                 success(res) {
                   if (res.data.userType === 1) {
+                    store.commit('auth');
                     wx.navigateTo({url: '/pages/broadcast/main'})
                   } else {
                     wx.navigateTo({url: '/pages/counter/main'})
@@ -104,7 +111,10 @@
               })// end request
             }
           })
-        }// end success
+        },// end success
+        fail() {
+          wx.navigateTo({url: '/pages/counter/main'})
+        }
       })// end wxGet
 
     }
