@@ -35,7 +35,7 @@ let server = https.createServer(options, app);
 
 
 model.initDB().then(function () {
-    server.listen(443, 'localhost', function () {
+    server.listen(443, function () {
         console.log('服务器开始监听');
     })
 })
