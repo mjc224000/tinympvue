@@ -1,4 +1,4 @@
-let url = 'https://oursteel.cn/';
+let url = 'https://mjc224000.top/';
 export default {
   auth: url + 'auth',
   wss: 'wss://oursteel.cn',
