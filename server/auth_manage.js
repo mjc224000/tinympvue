@@ -39,8 +39,28 @@ function showUsers(req, res) {
     })
 }
 
+function unAuth(req, res) {
+    let {person, role} = req.models;
+    let query = req.query;
+    const {openid} = query;
+    person.find({openid}, function (err, persons) {
+        if (err) return;
+
+        role.find({name: 'client'}, function (err, roles) {
+            if (err) return;
+            persons[0].setRole(roles[0], function (err) {
+                if (!err) {
+                    res.send('ok');
+                }
+            })
+        })
+    })
+
+}
+
 function auth(req, res) {
 // 获取code  前端通过wx.login 获取 code, 后端使用 curl 更加code 请求 openid;
+    console.log(res);
     let userType = 0;
     let query = req.query;
     let {person, role} = req.models;
@@ -97,5 +117,6 @@ function auth(req, res) {
 module.exports = {
     auth,
     setRole,
-    showUsers
+    showUsers,
+    unAuth
 }
