@@ -11,12 +11,12 @@
       >授权登录
       </button>
       <div class="userinfo-nickname">
-        <card :text="userInfo.nickName"></card>
+        <card :text="userInfo&&userInfo.nickName||''"></card>
       </div>
     </div>
-
-      <a v-if="isAuth"  href="/pages/broadcast/main" class="counter">去往管理员页面</a>
-    <a href="/pages/counter/main" class="counter">查看当前牌号</a>
+      <div style="color:red;padding-top:100rpx;margin-bottom: 250rpx;font-size: 60rpx;font-weight: bold"> 柳钢物流园欢迎您</div>
+      <a v-if="isAuth"  href="/pages/broadcast/main" class="counter btn-gradient">去往管理员页面</a>
+    <a href="/pages/counter/main" class="counter btn-gradient">查看当前牌号</a>
   </div>
 </template>
 
@@ -126,6 +126,27 @@
 
     flex-direction: column;
     align-items: center;
+  }
+
+  .btn-gradient{
+    text-decoration: none;
+    color: white !important;
+    width:380rpx;
+    text-align: center;
+    padding: 10px 30px;
+    display: inline-block;
+    position: relative;
+    border: 1px solid rgba(0,0,0,0.21) !important;
+    border-bottom: 4px solid rgba(0,0,0,0.21);
+    border-radius: 4px;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.15);
+    background: rgba(27,188,194,1);
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(27,188,194,1)), to(rgba(24,163,168,1)));
+    background: -webkit-linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
+    height: 80rpx;
+    font-size: 50rpx;
+    line-height: 80rpx;
+
   }
 
   .userinfo-avatar {

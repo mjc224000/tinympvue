@@ -2,7 +2,7 @@
   <div>
     {{test}}
     <p class="top">
-      当前排队号为{{ count }}，请处于该排队号之前的司机进入园区。
+      当前号码为 <span style="color:red;font-size: 60rpx;">{{count}} </span>,请位于此号码前的司机来领发货单
     </p>
     <div>
       <div class="bottom">
@@ -12,7 +12,7 @@
         <form action=""></form>
         <div class="button-wrap">
 
-          <input size="30" class="small text" type="text" placeholder="输入数字" v-model="counter"
+          <input size="30" style="height: 68rpx;line-height: 68rpxvc " class="small text" type="text" placeholder="输入数字" v-model="counter"
                  @confirm="handleConfirm"/>
           <button class="small" v-on:click="increment">+</button>
           <button class="small" v-on:click="decrement">-</button>
@@ -123,13 +123,14 @@
   }
 
   .top {
-    text-indent: 70 rpx;
+    text-indent: 70rpx;
+    padding-top: 100rpx;
   }
 
   .bottom {
     width: 100%;
     position: fixed;
-    bottom: 0;
+    bottom: 200rpx;
   }
 
   .button {
