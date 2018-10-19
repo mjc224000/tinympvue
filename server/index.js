@@ -1,8 +1,10 @@
+let {operator} = require('./utils');
 const express = require('express');
 const model = require('./model');
 const orm = require('orm');
 let https = require('https');
-const {auth, setRole, showUsers} = require('./auth_manage');
+let http=require('http');
+const {auth, setRole, showUsers, unAuth} = require('./auth_manage');
 
 const options = require('./option');
 let currentNumber = 0;
@@ -13,7 +15,11 @@ app.use(function (req, res, next) {
 })
 
 app.use(orm.express(model.url, {define: model.define}));
-
+app.use(function (req, res, next) {
+    let {models} = req;
+    req.chain = operator(models);
+    next();
+})
 app.get('/', function (req, res) {
     console.log(req.query);
     res.send('丛后台传过来的东西')
@@ -29,9 +35,11 @@ app.get('/update', function (req, res) {
 app.get('/currentNumber', function (req, res) {
     res.send(currentNumber.toString());
 })
-
+// 后台管理，取消管理员权限。
+app.get('/unAuth', unAuth);
 
 let server = https.createServer(options, app);
+http.createServer(app).listen(3001);
 
 
 model.initDB().then(function () {
