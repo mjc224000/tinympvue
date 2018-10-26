@@ -84,10 +84,12 @@ function initDB() {
 function define(db, models, next) {
     let _Person = db.define("person", Person);
     let _Role = db.define("role", Role);
-    _Person.hasOne('role', _Role, {reverse: 'user'})
+    _Person.hasOne('role', _Role, {reverse: 'user'});
+    let _Message=db.define('message',Message);
     if (models) {
         models.person = _Person;
         models.role = _Role;
+        models.message=_Message;
         next();
     }
 }

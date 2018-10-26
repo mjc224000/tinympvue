@@ -1,14 +1,14 @@
-module.exports = function (ws, wss) {
+let sillyDateTime = require('silly-datetime');
 
-        ws.on('message', function incoming(data) {
-            // Broadcast to everyone else.
-            console.log(data);
-
-            wss.clients.forEach(function each(client) {
-                if (client !== ws && client.readyState === WebSocket.OPEN) {
-                    client.send(data);
-                }
-            });
-        });
-
+function message(req, res) {
+    let date = sillyDateTime.format(new Date(), 'YYYY-MM-DD HH:mm');
+    let {message, title} = req.query;
+    console.log(req.models);;
+    console.log(title, req.headers);
+   // messageModal.create({message, title, date}, function (err) {
+        if (!err) res.send('ok');
+  //  })
+    res.send('ok');
 }
+
+module.exports = {message}
