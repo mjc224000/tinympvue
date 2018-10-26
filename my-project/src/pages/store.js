@@ -8,7 +8,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     count: 0,
-    auth: false
+    auth: false,
+    token:null
   },
   mutations: {
     increment: (state) => {
@@ -22,8 +23,9 @@ const store = new Vuex.Store({
     updateNumber(state, stark) {
       state.count = parseInt( stark  ) ;
     },
-    auth(state) {
-      state.auth=true
+    auth(state,stark) {
+      state.auth=true;
+      state.token=stark;
     }
   }
 })

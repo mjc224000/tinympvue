@@ -1,7 +1,7 @@
 <template>
   <div class="container">
 
-    <div class="userinfo" @click="bindViewTap">
+    <div class="userinfo">
 
       <div style="width: 120rpx" v-if=" userInfo && userInfo.avatarUrl">
         <img style="width: 120rpx ;height:120rpx" class="userinfo-avatar" :src="userInfo.avatarUrl"/>
@@ -14,8 +14,8 @@
         <card :text="userInfo&&userInfo.nickName||''"></card>
       </div>
     </div>
-      <div style="color:red;padding-top:100rpx;margin-bottom: 250rpx;font-size: 60rpx;font-weight: bold"> 柳钢物流园欢迎您</div>
-      <a v-if="isAuth"  href="/pages/broadcast/main" class="counter btn-gradient">去往管理员页面</a>
+    <div style="color:red;padding-top:100rpx;margin-bottom: 250rpx;font-size: 60rpx;font-weight: bold"> 柳钢物流园欢迎您</div>
+    <a v-if="isAuth" href="/pages/broadcast/main" class="counter btn-gradient">去往管理员页面</a>
     <a href="/pages/counter/main" class="counter btn-gradient">查看当前牌号</a>
   </div>
 </template>
@@ -23,13 +23,13 @@
 <script>
   import card from '@/components/card'
   import config from '@/config.js';
- import store from '@/pages/store'
+  import store from '@/pages/store'
+
   export default {
     data() {
       return {
         motto: 'Hello World',
-        userInfo: {},
-        backendMsg: ''
+        userInfo: {}
       }
     },
 
@@ -39,19 +39,15 @@
     mounted() {
 
     },
-  computed:{
-     isAuth(){
-       return store.state.auth;
-     }
-  }
-  ,
+    computed: {
+      isAuth() {
+        return store.state.auth;
+      }
+    }
+    ,
 
     methods: {
-      bindViewTap() {
-        const url = '' +
-          '../logs/main'
-        wx.navigateTo({url})
-      },
+
       bindGetUserInfo(e) {
         console.log(e, 'user info');
         let that = this;
@@ -67,11 +63,13 @@
                 code: code
               },
               success(res) {
-                that.backendMsg = res.data
                 if (res.data.userType === 1) {
-                  store.commit('auth');
+               let token= res.data.token;
+                  store.commit('auth',token);
+                  console.log('有权限',res)
                   wx.navigateTo({url: '/pages/broadcast/main'})
                 } else {
+                  console.log('我没有权限',res)
                   wx.navigateTo({url: '/pages/counter/main'})
                 }
               }
@@ -83,40 +81,30 @@
 
     created() {
       // 调用应用实例的方法获取全局数据
-      let that = this
-      wx.getUserInfo({
-        success: function (res) {
-          let userInfo = res.userInfo;
-          that.userInfo = res.userInfo
-          wx.login({
+      wx.login({
+        success(res) {
+          console.log(res, 'from login')
+          // 从login取 code 传后台.
+          let code = res.code;
+          wx.request({
+            url: config.auth,
+            data: {
+              code: code
+            },
             success(res) {
-              console.log(res, 'from login')
-              // 从login取 code 传后台.
-              let code = res.code;
-              wx.request({
-                url: config.auth,
-                data: {
-                  ...userInfo,
-                  code: code
-                },
-                success(res) {
-                  if (res.data.userType === 1) {
-                    store.commit('auth');
-                    wx.navigateTo({url: '/pages/broadcast/main'})
-                  } else {
-                    wx.navigateTo({url: '/pages/counter/main'})
-                  }
-
-                }
-              })// end request
+              if (res.data.userType === 1) {
+                let token= res.data.token;
+                store.commit('auth',token);
+                console.log('有权限',res)
+                wx.navigateTo({url: '/pages/broadcast/main'})
+              } else {
+                console.log('我没有权限',res)
+                wx.navigateTo({url: '/pages/counter/main'})
+              }
             }
-          })
-        },// end success
-        fail() {
-          wx.navigateTo({url: '/pages/counter/main'})
+          })// end request
         }
-      })// end wxGet
-
+      })
     }
   }
 </script>
@@ -128,24 +116,24 @@
     align-items: center;
   }
 
-  .btn-gradient{
+  .btn-gradient {
     text-decoration: none;
     color: white !important;
-    width:380rpx;
+    width: 380 rpx;
     text-align: center;
     padding: 10px 30px;
     display: inline-block;
     position: relative;
-    border: 1px solid rgba(0,0,0,0.21) !important;
-    border-bottom: 4px solid rgba(0,0,0,0.21);
+    border: 1px solid rgba(0, 0, 0, 0.21) !important;
+    border-bottom: 4px solid rgba(0, 0, 0, 0.21);
     border-radius: 4px;
-    text-shadow: 0 1px 0 rgba(0,0,0,0.15);
-    background: rgba(27,188,194,1);
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(27,188,194,1)), to(rgba(24,163,168,1)));
-    background: -webkit-linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
-    height: 80rpx;
-    font-size: 50rpx;
-    line-height: 80rpx;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+    background: rgba(27, 188, 194, 1);
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(27, 188, 194, 1)), to(rgba(24, 163, 168, 1)));
+    background: -webkit-linear-gradient(rgba(27, 188, 194, 1) 0%, rgba(24, 163, 168, 1) 100%);
+    height: 80 rpx;
+    font-size: 50 rpx;
+    line-height: 80 rpx;
 
   }
 
