@@ -24,7 +24,7 @@ function messageList(req,res){
                     v.time=new Date(v.time).toLocaleString();
                     return v;
                 })
-                let c=docs[1];
+                let c=docs[0];
                 for(var i=0;i<100;i++){
                     docs.push(c);
                 }
