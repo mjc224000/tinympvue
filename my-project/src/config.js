@@ -6,5 +6,7 @@ export default {
   wss: 'wss://mjc224000.top',
   update: url + 'update',
   currentNumber:url+'currentNumber',
-  message:url+'msg'
+  message:url+'msg',
+  messageList:url+'msgList',
+  url
 }
