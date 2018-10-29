@@ -45,7 +45,7 @@ let Message={
     message:String,
     enable:Boolean,
     title:String,
-    time:Date,
+    time:{type:'date',time:true},
 }
 function initDB() {
     return new Promise(function (resolve, reject) {

@@ -1,14 +1,36 @@
-let sillyDateTime = require('silly-datetime');
-
 function message(req, res) {
-    let date = sillyDateTime.format(new Date(), 'YYYY-MM-DD HH:mm');
+    let messageModel=req.models.message
     let {message, title} = req.query;
-    console.log(req.models);;
-    console.log(title, req.headers);
-   // messageModal.create({message, title, date}, function (err) {
+    messageModel.create({message, title,time: new Date()}, function (err) {
+        console.log(err);
         if (!err) res.send('ok');
-  //  })
-    res.send('ok');
+ })
+}
+function deleteMessage(req,res){
+    let {message}=req.models.message;
+    let {messageId}=req.query;
+    message.find({messageId}).remove(function (err) {
+        if(!err){
+            res.send('ok');
+        }
+    })
+}
+function messageList(req,res){
+    let {message}=req.models;
+    message.find({},function (err,docs) {
+            if(!err){
+
+                docs=docs.map(v=>{
+                    v.time=new Date(v.time).toLocaleString();
+                    return v;
+                })
+                let c=docs[1];
+                for(var i=0;i<100;i++){
+                    docs.push(c);
+                }
+                res.json(docs);
+            }
+        })
 }
 
-module.exports = {message}
+module.exports = {message,messageList,deleteMessage};

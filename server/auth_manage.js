@@ -4,13 +4,13 @@ let token = 'oy8EB0ZyvZkXFK20Q4E0nL8DX3SQ';
 let passwd = '123456';
 let option = require('./option'),
     curl = require('curl')
-var validate = /^\/(setRole)|(api\/users)|(msg)/
+var validate = /^\/(setRole)|(api\/users)|(msg$)/
 
 function check(req, res, next) {
     if (!validate.test(req.url)) {//如果不是权限路由 往下走
         next();
     } else {
-        console.log(req.headers);
+        console.log(req.headers,req.url);
         if (req.headers['authorization'] === token) { // 是权限路由 验证请求头的authorization字段
             console.log('通过')
             next();
@@ -105,7 +105,6 @@ function auth(req, res) {
     let query = req.query;
     let {person} = req.models;
     let {nickName, gender, language, city, province, country, code, avatarUrl} = query;
-    console.log(query);
     let url = code2SessionUrl({...option, code});
     curl.get(url, {}, function (err, _res, body) {
         body = JSON.parse(body);
