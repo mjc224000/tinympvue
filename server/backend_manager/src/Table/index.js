@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Divider, Modal, Table} from 'antd';
-import axios from './../request';
+import axios ,{store}from './../request';
 
 const {Column} = Table;
 
@@ -14,48 +14,88 @@ class BackEndTable extends Component {
             openid: '',
             isConfirmLoading: false,
             nickName: '',
-            msg: ''
-
+            msg: '',
+            modalType: '',
+            isLoginModalShow: true,
+            pw: ''
         }
     }
 
     componentDidMount() {
-
-        axios.get('api/users').then((res) => {
-            let list = res.data.list;
-            list.map((v) => v.key = v.personId)
-            this.setState({list: res.data.list})
-        }).catch((res) => console.log(res));
+        if(store('token')){
+            this.setState({isLoginModalShow:false})
+            this.getList();
+        }
     }
-
-    closeAuth = () => {
-        this.setState({isAuthModalShow: false})
-    }
-
+     getList=()=>{
+         axios.get('api/users').then((res) => {
+             let list = res.data.list;
+             list.map((v) => v.key = v.personId)
+             this.setState({list: res.data.list})
+         }).catch((res) => console.log(res));
+     }
     closeConfirm = () => {
         this.setState(
             {
                 isConfirmModalShow: false,
                 nickName: '',
                 openid: '',
-                isConfirmLoading: false
+                isConfirmLoading: false,
+                modalType: ''
             })
     }
-
-    grant = (record) => {
+    handleLoginModalCancel = () => {
+        this.setState({isLoginModalShow: false})
+    }
+    showModal = (record, modalType) => {
         let {openid, nickName} = record;
         this.setState(
             {
                 isConfirmModalShow: true,
                 openid, nickName,
-                msg:''
+                msg: '',
+                modalType
             });
     }
 
+    loginConfirm = () => {
+        const {pw} = this.state;
+        let that = this;
+        axios.get('login', {
+            params: {
+                pw
+            }
+        }).then(function (res) {
+            if (res.statusText === 'OK') {
+                store('token',res.data)
+                that.getList()
+                that.handleLoginModalCancel();
+            } else {
+
+            }
+        })
+    }
+
+    handlePwChange = (e) => {
+        this.setState({pw: e.target.value});
+    }
+
     confirm = () => {
-        let {openid} = this.state;
+        let {openid, modalType} = this.state;
         this.setState({isConfirmLoading: true});
-        axios.get('setRole', {params: {openid}}).then(res => {
+        if (modalType === 'delete') {
+            axios.delete('setRole', {params: {openid}}).then(res => {
+                if (res.data === 'ok') {
+                    this.setState({msg: '设置成功'});
+                    let that = this;
+                    setTimeout(function () {
+                        that.closeConfirm();
+                    }, 500)
+                }
+            })
+            return
+        }
+        axios.get(modalType === 'auth' ? 'setRole' : 'unAuth', {params: {openid}}).then(res => {
             if (res.data === 'ok') {
                 this.setState({msg: '设置成功'});
                 let that = this;
@@ -64,9 +104,25 @@ class BackEndTable extends Component {
                 }, 500)
             }
         })
+
     }
 
     render() {
+        let title, verb;
+        switch (this.state.modalType) {
+            case 'auth':
+                title = '授权';
+                verb = '给';
+                break;
+            case 'unAuth':
+                title = '撤销';
+                verb = '撤销';
+                break;
+            case 'delete':
+                title = '删除';
+                verb = '删除';
+                break;
+        }
         return (
             <React.Fragment>
                 <Table dataSource={this.state.list}>
@@ -107,35 +163,48 @@ class BackEndTable extends Component {
                         title="角色"
                         dataIndex="role_roleid"
                         key="role_roleid"
-                        render={(text,record)=>{
-                            return (<span> {text===1?'管理员':'无'}</span>)
+                        render={(text, record) => {
+                            return (<span> {text === 1 ? '管理员' : '无'}</span>)
                         }}
                     />
                     <Column
                         title="Action"
                         key="action"
                         render={(text, record) => {
+                            console.log(record, 'record');
                             return (
                                 <span>
-          <Divider type="vertical"/>
-          <a href="javascript:;" onClick={() => this.grant(record)}>授权</a>
-        </span>
+                                    {record.role_roleid === 1 ? <a href="javascript:;"
+                                                                   onClick={() => this.showModal(record, 'unAuth')}>取消</a> : null}
+                                    <Divider type="vertical"/>
+                              <a href="javascript:;" onClick={() => this.showModal(record, 'auth')}>授权</a>
+                                    <Divider type="vertical"/>
+                                  <a href="javascript:;" onClick={() => this.showModal(record, 'delete')}>删除</a></span>
                             )
                         }}
                     />
                 </Table>
-                <Modal title="Title"
+                <Modal title={title}
                        visible={this.state.isConfirmModalShow}
                        onOk={this.confirm}
                        confirmLoading={this.state.isConfirmLoading}
                        onCancel={this.closeConfirm}
                 >
                     {
-                        this.state.msg === '' ? <p>授权确认，是否确定要给openid 为{this.state.openid},昵称为 <span
+                        this.state.msg === '' ? <p>授权确认，是否确定要{verb}openid 为{this.state.openid},昵称为 <span
                             style={{color: 'red'}}> {this.state.nickName}</span>
                             的用户授权
                         </p> : this.state.msg
                     }
+                </Modal>
+                <Modal title={'登录'}
+                       visible={this.state.isLoginModalShow}
+                       onOk={this.loginConfirm}
+                       onCancel={this.handleLoginModalCancel}>
+                    <div>
+                        密码:<input style={{marginLeft: '20px'}} type="text" value={this.state.pw}
+                                  onChange={this.handlePwChange}/>
+                    </div>
                 </Modal>
             </React.Fragment>
         )

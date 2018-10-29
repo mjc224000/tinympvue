@@ -9,6 +9,6 @@ let key = fs.readFileSync('./openssl/1531319468158.key'),
 module.exports = {
     key: key,
     cert: cert,
-    appid:'wxe01f5e3d6ba2e2d7',
-    secret:"3b88a127f73fc820d124b44348275b0b"
+    appid:'wx0b13931ed73bcf91',
+    secret:"8dbb7f28d9b71a9893e13f3769c1a9fc"
 }

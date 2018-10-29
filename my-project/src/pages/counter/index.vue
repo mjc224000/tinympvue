@@ -1,8 +1,8 @@
 <template>
   <div class="counter-warp">
-    <p> 当前号码为：{{ count }}，请位于此号码前的司机进入园区。</p>
+    <p style="text-indent: 70rpx;font-size: 60rpx;"> 当前号码为{{count}},请位于此号码前的司机来领发货单</p>
     <div class="text"> {{ count }}</div>
-    <a href="/pages/index/main" class="home">去往首页</a>
+    <a href="/pages/index/main" class="home btn-gradient">去往首页</a>
   </div>
 </template>
 
@@ -22,6 +22,12 @@
     methods: {},
     created() {
       let that = this;
+      wx.request({
+        url: config.currentNumber,
+        success: function (res) {
+          that.count = res.data;
+        }
+      })
       setInterval(function () {
         wx.request({
           url: config.currentNumber,
@@ -39,7 +45,26 @@
     text-align: center;
     margin-top: 100px;
   }
+  .btn-gradient{
+    text-decoration: none;
+    color: white !important;
+    width:380rpx;
+    text-align: center;
+    padding: 10px 30px;
+    display: inline-block;
+    position: relative;
+    border: 1px solid rgba(0,0,0,0.21) !important;
+    border-bottom: 4px solid rgba(0,0,0,0.21);
+    border-radius: 4px;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.15);
+    background: rgba(27,188,194,1);
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(27,188,194,1)), to(rgba(24,163,168,1)));
+    background: -webkit-linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
+    height: 80rpx;
+    font-size: 50rpx;
+    line-height: 80rpx;
 
+  }
   .home {
     display: inline-block;
     margin: 100px auto;
