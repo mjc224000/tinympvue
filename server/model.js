@@ -30,7 +30,7 @@ let Person = {
     province: String,
     country: String,
     avatarUrl: String,
-    openid: String
+    openid: String,
 }
 let Role = {
     roleid: {type: 'serial', key: true},
@@ -57,12 +57,14 @@ let QueueTime={
     toNumber:Number
 }
 
+
 function initDB() {
     return new Promise(function (resolve, reject) {
         orm.connectAsync(opts).then(function (db) {
             let _Person = db.define("person", Person);
             let _Role = db.define("role", Role);
             let _Message=db.define('message',Message);
+             db.define('queueTime',QueueTime);
             _Person.hasOne('role', _Role, {reverse: 'user'});
             _Message.hasOne('person',_Person,{reverse:'_from'});
             db.sync(function (err) {

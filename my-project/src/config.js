@@ -5,8 +5,10 @@ export default {
   auth: url + 'auth',
   wss: 'wss://mjc224000.top',
   update: url + 'update',
-  currentNumber:url+'currentNumber',
   message:url+'msg',
   messageList:url+'msgList',
+  from:url+'queue/from',
+  to:url+'queue/to',
+  queue:url+'queue',
   url
 }

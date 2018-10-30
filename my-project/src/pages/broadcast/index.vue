@@ -1,8 +1,7 @@
 <template>
   <div>
-    {{test}}
     <p class="top">
-      当前号码为 <span style="color:red;font-size: 60rpx;">{{count}} </span>,请位于此号码前的司机来领发货单
+      当前号码为 <span style="color:red;font-size: 60rpx;">{{from}}-{{to}} </span>,请位于此号码之间的司机来领发货单
     </p>
     <div>
       <div class="bottom">
@@ -12,12 +11,15 @@
         <form action=""></form>
         <div class="button-wrap">
 
-          <input size="30" style="height: 68rpx;line-height: 68rpxvc " class="small text" type="text" placeholder="输入数字" v-model="counter"
-                 @confirm="handleConfirm"/>
-          <button class="small" v-on:click="increment">+</button>
-          <button class="small" v-on:click="decrement">-</button>
+          <input size="30" style="height: 68rpx;line-height: 68rpxvc " class="small text" type="text" placeholder="起始"
+                 v-model="Tfrom"
+                 @confirm="handleFromConfirm"/>
+          <input size="30" style="height: 68rpx;line-height: 68rpxvc " class="small text" type="text" placeholder="结束"
+                 v-model="Tto"
+                 @confirm="handleToConfirm"/>
+          <input type="button" value="完成" v-on:click="handleSubmit">
         </div>
-<!--    <button class="button" @click="increment"> 发送消息</button>-->
+        <!--    <button class="button" @click="increment"> 发送消息</button>-->
       </div>
     </div>
   </div>
@@ -28,13 +30,10 @@
   import store from '@/pages/store';
   import config from '@/config.js';
 
-  function asyncReq(value) {
+  function asyncReq(option) {
     return new Promise(function (resolve) {
       wx.request({
-        url: config.update,
-        data: {
-          updateNumber: value
-        },
+        ...option,
         success(res) {
           if (res.data === 'ok') {
             resolve(res);
@@ -45,59 +44,75 @@
   }
 
   export default {
+    data: {
+      Ifrom: 0,
+      Tto: 0
+    },
     methods: {
-      increment() {
-        let value = store.state.count + 1;
-        asyncReq(value).then(() => {
-          store.commit('increment');
-        })
+      handleFromConfirm(e) {
+        let reg = /^0-9/;
+        let value = e.target.value;
+        if (reg.test(value)) return;
+        asyncReq({
+          url: config.from,
+          method: 'put',
+          data: {from: value}
+        }).then(() => store.commit('updateFrom', value));
       }
       ,
-      decrement() {
-        let value = store.state.count - 1;
-        asyncReq(value).then(() => {
-          store.commit('decrement')
-        })
-
+      handleToConfirm(e) {
+        let reg = /^0-9/;
+        let value = e.target.value;
+        if (reg.test(value)) return;
+        asyncReq({
+          url: config.to,
+          method: 'put',
+          data: {to: value}
+        }).then(() => store.commit('updateTo', value))
       },
-      handleConfirm(e) {
-        let reg = /[^0-9]/;
-        if (!reg.test(e.target.value)) {
-          asyncReq(e.target.value).then(function () {
-            store.commit('updateNumber', e.target.value)
-          })
+      handleSubmit() {
+        let {Tfrom, Tto} = this;
+        if (Tfrom > Tto) {
+          return
         }
-
+        let reg = /[^0-9]/;
+        if (reg.test(Tfrom) || reg.test(Tto)) {
+          return
+        }
+        asyncReq({
+          url: config.queue,
+          method: 'put',
+          data: {
+            from: Tfrom,
+            to: Tto
+          }
+        }).then(() => store.commit('updateNumber', {from: Tfrom, to: Tto}))
       },
     },
     created() {
+      let that=this;
       wx.request({
-        url: config.currentNumber,
+        url: config.queue,
         success(res) {
-          store.commit('updateNumber', res.data)
+          let {from,to}=res.data;
+          store.commit('updateNumber', {from,to});
+          that.from=from;
+          that.to=to;
         }
       })
     },
-    data: {
-      test: ''
-    },
     computed: {
-      count() {
-        return store.state.count
+      from() {
+        return store.state.from
       },
-      counter: {
-        get() {
-          return store.state.count
-        },
-        set(value) {
-          // store.commit('updateNumber',value);
-        }
+      to() {
+        return store.state.to
       }
     }
   }
 </script>
 
-<style>
+<style scoped>
   .small {
     width: 25%;
   }
@@ -120,6 +135,7 @@
     line-height: 2.55555556;
     text-align: center;
     border-radius: 4 rpx;
+
   }
 
   .top {

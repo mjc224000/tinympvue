@@ -3,13 +3,14 @@
     <ul>
       <li  v-bind:class="{'alone':item.listClass,'encounter':item.wallClass,'together':item.princeClass,
       'gallary':true,
-      'selected':item.selected
+      'selected':item.messageId===selected
       }"
-          v-for="item in list" :key="item.messageId"
-      v-on:click="tab"
+          v-for="item in list"
+           :key="item.messageId"
+           :id="item.messageId"
       >
         <div style="width: 900rpx">
-          <div style="width:750rpx;height: 300rpx;float: left">
+          <div style="width:750rpx;height: 300rpx;float: left"     v-on:click="()=>tab(item)">
             <div class="top">
               <div class="left">{{item.title}}</div>
               <div class="{right}">{{item.time}}></div>
@@ -32,12 +33,18 @@
   export default {
     name: "index",
     data: {
-      list: []
+      list: [],
+      selected: null
     },
     methods:{
       tab(e){
-        console.log(e);
-      }
+        let selected=this.selected;
+        if (e.messageId === selected) {
+          this.selected=null;
+        }else {
+          this.selected=e.messageId;
+        }
+      },
     }
     ,
     created() {
@@ -46,7 +53,6 @@
         url: config.messageList,
         success(res) {
           let list = res.data;
-          console.log(list);
           list.forEach((v, i) => {
             switch (i % 3) {
               case 0:
@@ -78,6 +84,7 @@
   li {
     border-bottom: 1 rpx solid #aaa;
     height: 300rpx;
+    transition: 0.2s ease-in-out;
   }
 .gallery{
   height: 300rpx;
@@ -108,7 +115,7 @@
     color: black;
   }
   .selected{
-    transform: translateX(-120rpx);
-    transition: 0.5s ease-in-out;
+    transform: translateX(-300rpx);
+
   }
 </style>
