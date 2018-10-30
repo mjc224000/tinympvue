@@ -1,6 +1,7 @@
 let {operator} = require('./utils');
 const express = require('express');
-let bodyParser = require('body-parser')
+let bodyParser = require('body-parser');
+let queue=require('./queue');
 const model = require('./model');
 const orm = require('orm');
 let https = require('https');
@@ -10,6 +11,7 @@ const {message,deleteMessage,messageList}=require('./msg_manager');
 const options = require('./option');
 let currentNumber = 0;
 let app = express();
+let from=0,to=0;
 app.use('/img',express.static('./img'));
 app.use(function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", '*');
@@ -17,7 +19,6 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Headers', "*");
     setTimeout(next)
 })
-
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 app.use(orm.express(model.url, {define: model.define}));
@@ -25,8 +26,9 @@ app.use(function (req, res, next) {
     let {models} = req;
     req.chain = operator(models);
     next();
-})
+});
 app.use(check);
+app.use('/queue',queue);
 app.delete('/setRole', delete_auth);
 app.get('/', function (req, res) {
     console.log(req.query);
@@ -46,7 +48,20 @@ app.get('/currentNumber', function (req, res) {
 app.get('/login', login);
 // 后台管理，取消管理员权限。
 app.get('/unAuth', unAuth);
-
+// 废弃
+app.get('/updateFrom', function (req, res) {
+    from = req.query.fromNumber;
+    res.send('ok');
+});
+// 废弃
+app.get('/updateTo',function (req,res) {
+    to=req.query.toNumber;
+    res.send('ok');
+});
+// 废弃
+app.get('/fromToNumber', function (req, res) {
+    res.json({from, to});
+})
 // msg relevant
 app.get('/msg',message);
 app.get('/msgList',messageList);

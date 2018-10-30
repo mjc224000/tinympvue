@@ -21,8 +21,6 @@ let url = 'mysql://root:7898ikuojl@localhost/queue';
     password: '7898ikuojl'
 };
 let url = 'mysql://root:7898ikuojl@mjc224000.top/queue';*/
-
-
 let Person = {
     personId: {type: 'serial', key: true},
     nickName: String,
@@ -47,6 +45,18 @@ let Message={
     title:String,
     time:{type:'date',time:true},
 }
+let QueueTime={
+    queueTimeId:{
+        type:'serial',key:true
+    },
+    time:{
+        type:'date',
+        time:true
+    },
+    fromNumber: Number,
+    toNumber:Number
+}
+
 function initDB() {
     return new Promise(function (resolve, reject) {
         orm.connectAsync(opts).then(function (db) {
@@ -86,10 +96,12 @@ function define(db, models, next) {
     let _Role = db.define("role", Role);
     _Person.hasOne('role', _Role, {reverse: 'user'});
     let _Message=db.define('message',Message);
+    let _QueueTime=db.define('queueTime',QueueTime);
     if (models) {
         models.person = _Person;
         models.role = _Role;
         models.message=_Message;
+        models.queueTime=_QueueTime
         next();
     }
 }
