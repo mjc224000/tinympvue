@@ -7,25 +7,32 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    count: 0,
     auth: false,
-    token:null
+    token: null,
+    from: 0,
+    to: 0,
   },
   mutations: {
-    increment: (state) => {
-      let {count} = state
-      state.count = parseInt(count) + 1
-    },
-    decrement: (state) => {
-      let {count} = state
-      state.count = Math.max(0, parseInt(count) - 1)
-    },
+
     updateNumber(state, stark) {
-      state.count = parseInt( stark  ) ;
+      let {from, to} = stark;
+      from = parseInt(from);
+      to = parseInt(to);
+      state.from = from;
+      state.to = to
     },
-    auth(state,stark) {
-      state.auth=true;
-      state.token=stark;
+    updateFrom(state, stark) {
+      stark = parseInt(stark);
+      state.from = stark;
+    },
+    updateTo(state, stark) {
+      stark = parseInt(stark);
+      state.to = stark
+    }
+    ,
+    auth(state, stark) {
+      state.auth = true;
+      state.token = stark;
     }
   }
 })
