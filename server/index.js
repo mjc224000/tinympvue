@@ -7,7 +7,7 @@ const orm = require('orm');
 let https = require('https');
 let http = require('http');
 const {auth, setRole, showUsers, unAuth, delete_auth, check, login} = require('./auth_manage');
-const {message,deleteMessage,messageList}=require('./msg_manager');
+const {message,deleteMessage,messageList,putMessage}=require('./msg_manager');
 const options = require('./option');
 let currentNumber = 0;
 let app = express();
@@ -64,6 +64,7 @@ app.get('/fromToNumber', function (req, res) {
 })
 // msg relevant
 app.get('/msg',message);
+app.put('/msg',putMessage);
 app.get('/msgList',messageList);
 app.delete('/msg',deleteMessage);
 let server = https.createServer(options, app);
