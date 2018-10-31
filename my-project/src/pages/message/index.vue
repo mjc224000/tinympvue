@@ -11,29 +11,68 @@
 
 <script>
   import config from '@/config.js';
-  import store from '@/pages/store'
+  import store from '@/pages/store';
+  import {eventEmit} from '@/utils';
+
   export default {
     name: "index",
     data: {
       title: '',
-      message: ''
+      message: '',
+      method: 'post',
+      messageId: null,
     },
     methods: {
       handleSubmit() {
-        let token=store.state.token;
-        console.log(this);
-        wx.request({
-          url: config.message,
-          data: {title: this.title, message: this.message},
-          header: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Authorization": token
-          },
-          success(res){
-            console.log(res,'get zhi hou');
-          }
-        })
+        let token = store.state.token;
+        let that = this;
+        if (this.method != 'put') {
+          wx.request({
+            url: config.message,
+            data: {title: this.title, message: this.message},
+            header: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "Authorization": token
+            },
+            success(res) {
+              console.log(res, 'get zhi hou');
+            }
+          })
+        } else {
+          // put 接口
+          wx.request({
+            url: config.message,
+            data: {title: this.title, message: this.message, messageId: this.messageId},
+            method: 'put',
+            header: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "Authorization": token
+            },
+            success(res) {
+              if (res.data === 'modified') {
+                wx.showModal({
+                  title: '成功',
+                  content: '已经修改'
+                });
+                that.title = '';
+                that.message = '';
+                that.method = 'post';
+                that.messageId = null;
+                eventEmit('refreshList');
+              }
+
+            }
+          })
+        }
       }
+    },
+    onLoad: function (option) {
+      if (!option.messageId) return;
+      let {title, message, messageId} = option;
+      this.title = title;
+      this.message = message;
+      this.method = 'put';
+      this.messageId = messageId;
     }
   }
 </script>
