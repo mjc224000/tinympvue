@@ -17,8 +17,18 @@ export function formatTime (date) {
 
   return `${t1} ${t2}`
 }
+let listener=[];
+export function eventEmit(key,cb) {
+  if(typeof cb==='function'){
+    listener[key]=cb;
+  }else {
+    listener[key] && listener[key]()
+  }
 
+
+}
 export default {
   formatNumber,
-  formatTime
+  formatTime,
+  eventEmit
 }
