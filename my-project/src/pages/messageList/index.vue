@@ -40,6 +40,7 @@
 <script>
   import config from '@/config';
   import {eventEmit} from "../../utils";
+  import store from '@/pages/store';
   export default {
     name: "index",
     data: {
@@ -69,18 +70,26 @@
        this.editButton=null;
        this.deleteButton=null;
         let {title,message,messageId}=item;
+        let token=store.state.token;
        if(type==='edit'){
          wx.navigateTo({
            url: `/pages/message/main?title=${title}&message=${message}&messageId=${messageId}&method=put`
          })
          return
        }
+       // 为删除
        wx.showModal({
-         title:'标题',
-         content:'内容',
+         title:'',
+         content:'是否删除该条信息',
          success:function (res) {
            if(res.confirm){
-
+       wx.request({url:config.message,method:'delete',header:{
+           "Authorization": token, "Content-Type": "application/x-www-form-urlencoded"
+         },data:{
+           messageId:item.messageId,
+         },success(){
+           eventEmit('refreshList')
+         }})
 
            }else {
              console.log('取消');
@@ -92,8 +101,12 @@
     created() {
       let that = this;
       function init() {
+        'init le'
         wx.request({
           url: config.messageList,
+          headers:{
+
+          },
           success(res) {
             let list = res.data;
             list.forEach((v, i) => {
@@ -115,6 +128,7 @@
         })
       }
       eventEmit('refreshList',init)
+      this.init=init;
       init();
 
     }

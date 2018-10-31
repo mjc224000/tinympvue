@@ -26,7 +26,16 @@
       handleSubmit() {
         let token = store.state.token;
         let that = this;
+
+        function clear() {
+          that.title = '';
+          that.message = '';
+          that.method = 'post';
+          that.messageId = null;
+        }
+
         if (this.method != 'put') {
+          // 提交
           wx.request({
             url: config.message,
             data: {title: this.title, message: this.message},
@@ -35,11 +44,24 @@
               "Authorization": token
             },
             success(res) {
-              console.log(res, 'get zhi hou');
+              if (res.data === 'created') {
+                wx.showModal({
+                  title: '',
+                  content: '提交成功'
+                })
+                clear();
+                eventEmit('refreshList');
+              } else {
+                wx.showModal({
+                  title: '',
+                  content: '失败'
+                })
+              }
             }
+
           })
         } else {
-          // put 接口
+          // put 接口 修改信息
           wx.request({
             url: config.message,
             data: {title: this.title, message: this.message, messageId: this.messageId},
@@ -54,10 +76,7 @@
                   title: '成功',
                   content: '已经修改'
                 });
-                that.title = '';
-                that.message = '';
-                that.method = 'post';
-                that.messageId = null;
+                clear();
                 eventEmit('refreshList');
               }
 
@@ -67,6 +86,10 @@
       }
     },
     onLoad: function (option) {
+      if (option.from === 'index') {
+        clear();
+        return;
+      }
       if (!option.messageId) return;
       let {title, message, messageId} = option;
       this.title = title;

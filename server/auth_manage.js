@@ -10,7 +10,6 @@ function check(req, res, next) {
     if (!validate.test(req.url)) {//如果不是权限路由 往下走
         next();
     } else {
-        console.log(req.headers,req.url);
         if (req.headers['authorization'] === token) { // 是权限路由 验证请求头的authorization字段
             console.log('通过')
             next();
