@@ -12,11 +12,10 @@
         <button v-on:click="handleToggle" class="">重新计算</button>
       </div>
       <div v-else class="remain">
-       <input  style="box-shadow: inset 0 0 2rpx #18A3A8" type="text" v-model="queueNumber">
-        <button v-on:click="handleToggle" class="">计算</button>
+       <input  style="box-shadow: inset 0 0 8rpx #18A3A8" type="text" v-model="queueNumber">
+        <button v-on:click="handleToggle" class="">查询</button>
       </div>
     </div>
-    <a href="/pages/index/main" class="home btn-gradient" style="width:380 rpx;">去往首页</a>
   </div>
 </template>
 <script>
