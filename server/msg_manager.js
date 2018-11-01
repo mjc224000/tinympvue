@@ -2,7 +2,10 @@ function message(req, res) {
     let messageModel = req.models.message
     let {message, title} = req.query;
     messageModel.create({message, title, time: new Date()}, function (err) {
-        if (!err) res.send('created');
+        if (!err){ res.send('created')}else {
+            res.send('err');
+        };
+
     })
 }
 
@@ -42,7 +45,7 @@ function messageList(req, res) {
             docs = docs.map(v => {
                 v.time = new Date(v.time).toLocaleString();
                 return v;
-            })
+            }).reverse();
             res.json(docs);
         }
     })

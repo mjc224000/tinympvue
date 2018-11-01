@@ -5,11 +5,11 @@ router.use(function timeLog(req, res, next) {
     next()
 })
 router.put('/from', function (req, res) {
-    _from = req.query.from;
+    _from = req.body.from;
     res.send('ok');
 })
 router.put('/to', function (req, res) {
-    _to = req.query.to;
+    _to = req.body.to;
     res.send('ok');
 })
 
