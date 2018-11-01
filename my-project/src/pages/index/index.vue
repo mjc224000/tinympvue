@@ -15,7 +15,7 @@
       </div>
     </div>
     <div style="color:red;padding-top:100rpx;margin-bottom: 250rpx;font-size: 60rpx;font-weight: bold"> 柳钢物流园欢迎您</div>
-    <a v-if="isAuth" href="/pages/message/main?from='index'" class="counter btn-gradient">去往消息页面</a>
+    <a v-if="isAuth" href="/pages/message/main?from=index" class="counter btn-gradient">去往消息页面</a>
     <a v-if="isAuth" href="/pages/broadcast/main" class="counter btn-gradient">去往管理员页面</a>
     <a href="/pages/counter/main" class="counter btn-gradient">查看当前牌号</a>
   </div>

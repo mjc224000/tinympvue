@@ -21,14 +21,7 @@
     }, {
       "pagePath": "pages/messageList/main",
       "text": "消息列表"
-    },{
-        "pagePath": "pages/logs/main",
-        "text": "日志3"
-      },
-      {
-        "pagePath": "pages/logs/main",
-        "text": "日志4"
-      }
+    }
     ],
     "position":"top"
   }

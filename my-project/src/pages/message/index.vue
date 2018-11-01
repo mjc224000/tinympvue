@@ -2,7 +2,7 @@
   <div>
     <div class="title">标题: <input v-model="title" placeholder="填写标题" type="text"></div>
 
-    <div><textarea v-model="message" placeholder="填写信息" name="" cols="30" rows="10"></textarea></div>
+    <div><textarea style="box-shadow: inset 0 0 2rpx #666"   v-model="message" placeholder="填写信息" name="" cols="30" rows="10"></textarea></div>
     <div class="bottom">
       <button v-on:click="handleSubmit" class="btn-gradient">提交</button>
     </div>
@@ -23,17 +23,24 @@
       messageId: null,
     },
     methods: {
+      clear(){
+        this.title = '';
+        this.message = '';
+        this.method = 'post';
+        this.messageId = null;
+      },
+
       handleSubmit() {
         let token = store.state.token;
         let that = this;
-
-        function clear() {
-          that.title = '';
-          that.message = '';
-          that.method = 'post';
-          that.messageId = null;
+        // 如果没有消息 不能提交
+        if(this.message.trim()===''){
+          wx.showModal({
+            title: '',
+            content: '无内容'
+          })
+          return
         }
-
         if (this.method != 'put') {
           // 提交
           wx.request({
@@ -49,7 +56,7 @@
                   title: '',
                   content: '提交成功'
                 })
-                clear();
+                that.clear();
                 eventEmit('refreshList');
               } else {
                 wx.showModal({
@@ -76,7 +83,7 @@
                   title: '成功',
                   content: '已经修改'
                 });
-                clear();
+                that.clear();
                 eventEmit('refreshList');
               }
 
@@ -86,8 +93,9 @@
       }
     },
     onLoad: function (option) {
+      console.log(option);
       if (option.from === 'index') {
-        clear();
+        this.clear();
         return;
       }
       if (!option.messageId) return;

@@ -51,6 +51,9 @@
     },
     methods:{
       tab(e){
+        if(store.state.token===null){
+          return
+        }
         let selected=this.selected;
         if (e.messageId === selected) {
           this.selected=null;
@@ -160,18 +163,18 @@
   }
 
   .alone {
-    background: url("https://localhost/img/alone.jpg") fixed;
+    background: url("https://mjc224000.top/img/alone.jpg") fixed;
     color: wheat;
   }
 
   .encounter {
-    background: url("https://localhost/img/encounter.jpg") fixed;
+    background: url("https:///mjc224000.top/img/encounter.jpg") fixed;
     background-position: -150 rpx;
     color: black
   }
 
   .together {
-    background: url("https://localhost/img/together.jpg") fixed;
+    background: url("https:///mjc224000.top/img/together.jpg") fixed;
     background-position: -400 rpx;
     color: black;
   }

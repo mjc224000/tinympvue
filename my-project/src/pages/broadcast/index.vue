@@ -10,7 +10,6 @@
         </div>-->
         <form action=""></form>
         <div class="button-wrap">
-
           <input size="30" style="height: 68rpx;line-height: 68rpxvc " class="small text" type="text" placeholder="起始"
                  v-model="Tfrom"
                  @confirm="handleFromConfirm"/>
@@ -52,6 +51,7 @@
       handleFromConfirm(e) {
         let reg = /^0-9/;
         let value = e.target.value;
+        console.log(value);
         if (reg.test(value)) return;
         asyncReq({
           url: config.from,
@@ -72,7 +72,7 @@
       },
       handleSubmit() {
         let {Tfrom, Tto} = this;
-        if (Tfrom > Tto) {
+        if (+Tfrom > +Tto) {
           return
         }
         let reg = /[^0-9]/;
