@@ -5,7 +5,8 @@
     "pages/counter/main",
     "pages/broadcast/main",
     "pages/messageList/main",
-    "pages/message/main"
+    "pages/message/main",
+    "pages/showMessage/main"
   ],
 
   "window": {
