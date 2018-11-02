@@ -1,17 +1,38 @@
 <template>
-    <div>
-      <div> title </div>
-      <hr/>
-      <div>content </div>
-    </div>
+  <div>
+  <div style="display: flex;justify-content: space-between">
+    <div class="title">{{title}}</div>
+    <div> {{time}} </div>
+  </div>
+    <div style="text-indent: 72rpx"> {{message}} </div>
+  </div>
 </template>
 
 <script>
     export default {
-        name: "index.vue"
+        name: "index.vue",
+      data: {
+        title: '',
+        message: '',time:'',
+      },
+      onLoad(option){
+        let {title, message,time} = option;
+        this.title = title;
+        this.message = message;
+        this.time=time;
+        console.log(title,message,time);
+      }
     }
 </script>
 
 <style scoped>
+  .top {
+    text-align: center;
+    font-size: 26 rpx;
+  }
+
+  .title {
+    border-bottom: 1 rpx solid #aaa;
+  }
 
 </style>

@@ -1,22 +1,22 @@
 <template>
   <div class="wrap">
+    <div class="logo">
+    </div>
     <ul>
-      <li  v-bind:class="{'alone':item.listClass,'encounter':item.wallClass,'together':item.princeClass,
-      'gallary':true,
-      'selected':item.messageId===selected
-      }"
-          v-for="item in list"
+      <li
+          v-for="item in messageList"
            :key="item.messageId"
            :id="item.messageId"
+           style="width:750rpx;overflow: hidden"
       >
-        <div style="width: 975rpx">
+        <div style="width: 975rpx;  transition: 0.2s ease-in-out;" v-bind:class="{'selected':item.messageId===selected}">
           <div style="width:750rpx;height: 300rpx;float: left"     v-on:click="()=>tab(item)">
             <div class="top">
-              <div class="left">{{item.title}}</div>
-              <div class="{right}">{{item.time}}></div>
+              <div class="left"><p style="color:dodgerblue"  v-on:click="()=>handleShowMessage(item)">{{item.title}}  </p></div>
+              <div class="right">{{item.time}}></div>
             </div>
             <div class="content">
-              {{item.message}}
+              {{item.subMessage}}
             </div>
             <hr/>
           </div>
@@ -39,7 +39,6 @@
 
 <script>
   import config from '@/config';
-  import {eventEmit} from "../../utils";
   import store from '@/pages/store';
   export default {
     name: "index",
@@ -48,6 +47,11 @@
       selected: null,
       editButton:null,
       deleteButton:null
+    },
+    computed:{
+      messageList(){
+        return store.state.messageList;
+      }
     },
     methods:{
       tab(e){
@@ -68,7 +72,12 @@
             this.deleteButton=item.messageId;
           }
       }
-    ,
+    , handleShowMessage(item){
+        let {title,message,time}=item;
+        wx.navigateTo({
+          url: `/pages/showMessage/main?title=${title}&message=${message}&time=${time}`
+        })
+      },
       handleTouchEnd(item,type){
        this.editButton=null;
        this.deleteButton=null;
@@ -91,7 +100,7 @@
          },data:{
            messageId:item.messageId,
          },success(){
-           eventEmit('refreshList')
+           store.commit('refresh');
          }})
 
            }else {
@@ -102,38 +111,7 @@
       },
     } ,
     created() {
-      let that = this;
-      function init() {
-        'init le'
-        wx.request({
-          url: config.messageList,
-          headers:{
-
-          },
-          success(res) {
-            let list = res.data;
-            list.forEach((v, i) => {
-              switch (i % 3) {
-                case 0:
-                  v.listClass = true;
-                  break;
-                case 1:
-                  v.wallClass = true;
-                  break;
-                case 2:
-                  v.princeClass = true;
-                  break;
-              }
-            })
-            that.list = list;
-            console.log(res.data);
-          }
-        })
-      }
-      eventEmit('refreshList',init)
-      this.init=init;
-      init();
-
+     store.commit('refresh');
     }
   }
 </script>
@@ -143,12 +121,29 @@
     display: flex;
     justify-content: space-around;
     font-size: 24 rpx;
+    background:  linear-gradient(to right, rgba(150,150,150,0.8), rgba(230,230,230,0.8));
+    margin-bottom: 10rpx;
+   text-decoration: underline;
   }
-
+  .wrap{
+    position: relative;
+  }
+.logo{
+  position: fixed;
+  width: 100%;
+  top:0;
+  left: 0;
+  min-height: 1333rpx;
+  z-index: -1;
+  background-repeat: no-repeat;
+  background-image:url('https://mjc224000.top/img/wllogo.jpg');
+  background-size: contain;
+  background-attachment: fixed;
+}
   li {
     border-bottom: 1 rpx solid #aaa;
     height: 300rpx;
-    transition: 0.2s ease-in-out;
+    box-shadow: 0 0 3rpx #aaa ;
   }
 .gallery{
   height: 300rpx;
@@ -160,8 +155,13 @@
 
   .right {
     text-align: right;
+    font-size: 30rpx;
+    color:wheat;
   }
-
+.content{
+  text-indent: 60rpx;
+  color:#666
+}
   .alone {
     background: url("https://mjc224000.top/img/alone.jpg") fixed;
     color: wheat;

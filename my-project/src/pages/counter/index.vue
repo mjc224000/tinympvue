@@ -7,12 +7,12 @@
       <div><span style="font-size: 200rpx"> {{to}} </span></div>
     </div>
     <div class="estimate">
-      <div v-if="isShow"  class="remain">
+      <div v-if="isShow" class="remain">
         <div>{{remain}}</div>
         <button v-on:click="handleToggle" class="">重新计算</button>
       </div>
       <div v-else class="remain">
-       <input  style="box-shadow: inset 0 0 8rpx #18A3A8" type="text" v-model="queueNumber">
+        <input style="box-shadow: inset 0 0 8rpx #18A3A8" type="text" v-model="queueNumber">
         <button v-on:click="handleToggle" class="">查询</button>
       </div>
     </div>
@@ -28,18 +28,24 @@
       from: 0,
       to: 0,
       queueNumber: 0,
-      isShow:false
+      isShow: false
     },
     computed: {
       remain() {
-   ;
+        ;
         let {from, to, queueNumber} = this;
-        console.log(from,to,queueNumber)
+        console.log(from, to, queueNumber)
         if (queueNumber < +from) {
-          return  '已经过号';
+          return '已经过号';
         }
         if (queueNumber > to) {
-          return '大约需要' + (queueNumber - to) * 16 + '分钟';
+          let remain = (queueNumber - to) * 60 / 16;
+          let hours = parseInt(remain / 60);
+          let minutes = hours % 60;
+          if (hours) {
+            return '预计'+ hours+'小时'+minutes+'分钟后领取发货单';
+          }
+          return '预计' + parseInt(( queueNumber - to) * 60 / 16 )+ '分钟后领取发货单';
         }
         if (queueNumber) {
           return '轮到您，请进入园区。'
@@ -48,16 +54,16 @@
     }
     ,
     methods: {
-     handleToggle(){
-       if(this.queueNumber==0){
-         wx.showModal({
-           title:'',
-           content:'请输入数字'
-         })
-         return
-       }
-       this.isShow=!this.isShow;
-     }
+      handleToggle() {
+        if (this.queueNumber == 0) {
+          wx.showModal({
+            title: '',
+            content: '请输入数字'
+          })
+          return
+        }
+        this.isShow = !this.isShow;
+      }
     },
     created() {
       let that = this;
@@ -91,13 +97,17 @@
     text-align: center;
     margin-top: 1 rpx !important;
   }
-.remain{
-  display: flex;align-items: center;
-  justify-content: space-around;
-}
-.remain button{
-  flex-basis: 30%;
-}
+
+  .remain {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .remain button {
+    flex-basis: 30%;
+  }
+
   .btn-gradient {
     text-decoration: none;
     color: white !important;

@@ -11,13 +11,14 @@
       >授权登录
       </button>
       <div class="userinfo-nickname">
-        <card :text="userInfo&&userInfo.nickName||''"></card>
+        <card :text="userInfo && userInfo.nickName||''"></card>
       </div>
     </div>
-    <div style="color:red;padding-top:100rpx;margin-bottom: 250rpx;font-size: 60rpx;font-weight: bold"> 柳钢物流园欢迎您</div>
+
+    <div style="color:red;padding-top:100rpx;margin-bottom: 200rpx;font-size: 60rpx;font-weight: bold"> 柳钢物流园欢迎您</div>
     <a v-if="isAuth" href="/pages/message/main?from=index" class="counter btn-gradient">去往消息页面</a>
     <a v-if="isAuth" href="/pages/broadcast/main" class="counter btn-gradient">去往管理员页面</a>
-    <a href="/pages/counter/main" class="counter btn-gradient">查看当前牌号</a>
+    <a href="/pages/counter/main" class="counter btn-gradient">查看当前号牌</a>
   </div>
 </template>
 
@@ -43,6 +44,9 @@
     computed: {
       isAuth() {
         return store.state.auth;
+      },
+      banner(){
+        return store.state.messageList[0] && store.state.messageList[0].message || '';
       }
     }
     ,
@@ -82,6 +86,14 @@
 
     created() {
       // 调用应用实例的方法获取全局数据
+      let that=this;
+      wx.getUserInfo({
+        success(res){
+        that.userInfo=res.userInfo;
+        },
+        fail(e){
+        }
+      })
       wx.login({
         success(res) {
           console.log(res, 'from login')
@@ -105,12 +117,14 @@
             }
           })// end request
         }
-      })
+      });
+
     }
   }
 </script>
 
 <style scoped>
+
   .userinfo {
 
     flex-direction: column;

@@ -10,10 +10,10 @@
         </div>-->
         <form action=""></form>
         <div class="button-wrap">
-          <input size="30" style="height: 68rpx;line-height: 68rpxvc " class="small text" type="text" placeholder="起始"
+          <input size="30" style="height: 68rpx;line-height: 68rpx" class="small text" type="text" placeholder="起始"
                  v-model="Tfrom"
                  @confirm="handleFromConfirm"/>
-          <input size="30" style="height: 68rpx;line-height: 68rpxvc " class="small text" type="text" placeholder="结束"
+          <input size="30" style="height: 68rpx;line-height: 68rpx " class="small text" type="text" placeholder="结束"
                  v-model="Tto"
                  @confirm="handleToConfirm"/>
           <input type="button" value="完成" v-on:click="handleSubmit">
@@ -44,7 +44,7 @@
 
   export default {
     data: {
-      Ifrom: 0,
+      Tfrom: 0,
       Tto: 0
     },
     methods: {
@@ -96,8 +96,9 @@
         success(res) {
           let {from,to}=res.data;
           store.commit('updateNumber', {from,to});
-          that.from=from;
-          that.to=to;
+          console.log(from,to,'create')
+          that.Tfrom=from;
+          that.Tto=to;
         }
       })
     },

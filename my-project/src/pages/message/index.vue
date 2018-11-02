@@ -57,7 +57,7 @@
                   content: '提交成功'
                 })
                 that.clear();
-                eventEmit('refreshList');
+               store.commit('refresh');
               } else {
                 wx.showModal({
                   title: '',
@@ -84,7 +84,7 @@
                   content: '已经修改'
                 });
                 that.clear();
-                eventEmit('refreshList');
+                store.commit('refresh');
               }
 
             }
