@@ -9,18 +9,19 @@
            :id="item.messageId"
            style="width:750rpx;overflow: hidden"
       >
-        <div style="width: 975rpx;  transition: 0.2s ease-in-out;" v-bind:class="{'selected':item.messageId===selected}">
-          <div style="width:750rpx;height: 300rpx;float: left"     v-on:click="()=>tab(item)">
+        <div  style="width: 1000rpx;  transition: 0.2s ease-in-out;display: flex; align-items: stretch" v-bind:class="{'selected':item.messageId===selected}">
+          <div class="public" style="width:750rpx;"     v-on:click="()=>tab(item)">
+          <div class="public-wrap">
             <div class="top">
-              <div class="left"><p style="color:dodgerblue"  v-on:click="()=>handleShowMessage(item)">{{item.title}}  </p></div>
-              <div class="right">{{item.time}}></div>
-            </div>
+            <div class="left"><p style="color:dodgerblue"  v-on:click="()=>handleShowMessage(item)">{{item.title}}  </p></div>
+            <div class="right">{{item.time}}></div>
+          </div>
             <div class="content">
               {{item.subMessage}}
             </div>
-            <hr/>
           </div>
-          <div class="auth" style="height: 300rpx;float: left;width: 225rpx">
+          </div>
+          <div class="auth" style="width: 250rpx">
           <div class="auth-button"
                v-bind:class="{'touch-active':item.messageId==editButton}"
                v-on:touchstart="()=>handleTouchStart(item,'edit')"
@@ -121,9 +122,21 @@
     display: flex;
     justify-content: space-around;
     font-size: 24 rpx;
-    background:  linear-gradient(to right, rgba(150,150,150,0.8), rgba(230,230,230,0.8));
     margin-bottom: 10rpx;
-   text-decoration: underline;
+
+  }
+  .public{
+
+  }
+  li{
+    margin-bottom: 50.52rpx;
+    color: #313131;
+  }
+  .public-wrap{
+    width: 718rpx;
+    margin: auto;
+    border-radius: 15rpx ;
+    background-color: #e9e9e9;
   }
   .wrap{
     position: relative;
@@ -140,11 +153,7 @@
   background-size: contain;
   background-attachment: fixed;
 }
-  li {
-    border-bottom: 1 rpx solid #aaa;
-    height: 300rpx;
-    box-shadow: 0 0 3rpx #aaa ;
-  }
+
 .gallery{
   height: 300rpx;
   overflow: hidden;
@@ -185,6 +194,7 @@
   .auth{
     display: flex;
     text-align: center;
+    justify-content: space-around;
   }
   .auth-button{
     color:white;
