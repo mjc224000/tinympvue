@@ -1,10 +1,10 @@
 <template>
   <div>
-  <div style="display: flex;justify-content: space-between">
+  <div style="overflow: hidden ">
     <div class="title">{{title}}</div>
-    <div> {{time}} </div>
+    <div style="float: right" > {{time}} </div>
   </div>
-    <div style="text-indent: 72rpx"> {{message}} </div>
+    <div style="text-indent: 72rpx;margin-top: 50rpx"> {{message}} </div>
   </div>
 </template>
 
@@ -33,6 +33,7 @@
 
   .title {
     border-bottom: 1 rpx solid #aaa;
+   text-align: center;
   }
 
 </style>

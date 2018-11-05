@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="title">标题: <input v-model="title" placeholder="填写标题" type="text"></div>
+    <div class="title">标题: <input v-model="title" placeholder="填写标题" size="20"type="text"></div>
 
-    <div><textarea style="box-shadow: inset 0 0 2rpx #666"   v-model="message" placeholder="填写信息" name="" cols="30" rows="10"></textarea></div>
+    <div><textarea style="box-shadow: inset 0 0 2rpx #666"   v-model="message" placeholder="填写信息" name="" cols="30" rows="12"></textarea></div>
     <div class="bottom">
       <button v-on:click="handleSubmit" class="btn-gradient">提交</button>
     </div>

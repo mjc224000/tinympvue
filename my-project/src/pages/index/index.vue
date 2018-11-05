@@ -16,9 +16,8 @@
     </div>
 
     <div style="color:red;padding-top:100rpx;margin-bottom: 200rpx;font-size: 60rpx;font-weight: bold"> 柳钢物流园欢迎您</div>
-    <a v-if="isAuth" href="/pages/message/main?from=index" class="counter btn-gradient">去往消息页面</a>
-    <a v-if="isAuth" href="/pages/broadcast/main" class="counter btn-gradient">去往管理员页面</a>
-    <a href="/pages/counter/main" class="counter btn-gradient">查看当前号牌</a>
+    <a v-if="isAuth" href="/pages/message/main?from=index" class="counter btn-gradient">消息管理</a>
+    <a v-if="isAuth" href="/pages/broadcast/main" class="counter btn-gradient">牌号管理</a>
   </div>
 </template>
 
@@ -72,10 +71,10 @@
                let token= res.data.token;
                   store.commit('auth',token);
                   console.log('有权限',res)
-                  wx.navigateTo({url: '/pages/broadcast/main'})
+                //  wx.navigateTo({url: '/pages/broadcast/main'})
                 } else {
                   console.log('我没有权限',res)
-                  wx.navigateTo({url: '/pages/counter/main'})
+                 // wx.navigateTo({url: '/pages/counter/main'})
                 }
               }
             })// end request

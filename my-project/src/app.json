@@ -19,7 +19,10 @@
     "list": [{
       "pagePath": "pages/index/main",
       "text": "首页"
-    }, {
+    },{
+      "pagePath":"pages/counter/main",
+      "text":"当前号牌"
+    },{
       "pagePath": "pages/messageList/main",
       "text": "消息列表"
     }

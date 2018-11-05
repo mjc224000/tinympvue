@@ -58,8 +58,10 @@ const store = new Vuex.Store({
                 v.princeClass = true;
                 break;
             }*/
-            v.subMessage=v.message.substring(0,40);
-            if(v.subMessage.length===40){
+            v.index=i+1;
+            v.subMessage=v.message.substring(0,45);
+            v.title=v.title.substring(0,20);
+            if(v.subMessage.length===45){
               v.subMessage=v.subMessage+'...';
             }
           })

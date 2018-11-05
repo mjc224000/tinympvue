@@ -13,11 +13,12 @@
           <div class="public" style="width:750rpx;"     v-on:click="()=>tab(item)">
           <div class="public-wrap">
             <div class="top">
-            <div class="left"><p style="color:dodgerblue"  v-on:click="()=>handleShowMessage(item)">{{item.title}}  </p></div>
+            <div class="left"><p style="color:#313131;font-size: 28rpx;font-weight: bold;"  v-on:click="()=>handleShowMessage(item)">
+            <span> {{item.index}}</span>  {{item.title}}</p></div>
             <div class="right">{{item.time}}></div>
           </div>
             <div class="content">
-              {{item.subMessage}}
+           <p class="message">{{item.subMessage}}</p>
             </div>
           </div>
           </div>
@@ -57,6 +58,7 @@
     methods:{
       tab(e){
         if(store.state.token===null){
+          this.handleShowMessage(e);
           return
         }
         let selected=this.selected;
@@ -119,21 +121,42 @@
 
 <style scoped>
   .top {
-    display: flex;
-    justify-content: space-around;
-    font-size: 24 rpx;
+    font-size: 40rpx;
     margin-bottom: 10rpx;
-
+    overflow: hidden;
   }
   .public{
 
   }
+ ul{
+   margin-top: 50rpx;
+ }
   li{
-    margin-bottom: 50.52rpx;
+    margin-bottom: 32.52rpx;
     color: #313131;
   }
+  li span{
+    display: inline-block;
+    width: 30rpx;
+    height: 30rpx;
+    color:white;
+text-align: center;
+    border-radius: 15%;
+    margin-left: 20rpx;
+    background-color: #68ecff;
+  }
+  li:nth-child(1) span{
+    background-color: #f33431;
+  }
+  li:nth-child(2) span{
+    background-color: #f3bb38;
+  }
+  li:nth-child(3) span{
+    background-color: chartreuse;
+  }
+
   .public-wrap{
-    width: 718rpx;
+    width: 90%;
     margin: auto;
     border-radius: 15rpx ;
     background-color: #e9e9e9;
@@ -143,14 +166,14 @@
   }
 .logo{
   position: fixed;
-  width: 100%;
+  width: 110%;
   top:0;
   left: 0;
   min-height: 1333rpx;
   z-index: -1;
   background-repeat: no-repeat;
-  background-image:url('https://mjc224000.top/img/wllogo.jpg');
-  background-size: contain;
+  background-image:url('https://mjc224000.top/img/iphone2.jpg');
+  background-size: cover;
   background-attachment: fixed;
 }
 
@@ -159,34 +182,25 @@
   overflow: hidden;
 }
   .top div {
-    width: 50%;
   }
 
   .right {
     text-align: right;
-    font-size: 30rpx;
-    color:wheat;
+    font-size: 24rpx;
+    color:#aaa;
+    float: right;
   }
 .content{
   text-indent: 60rpx;
-  color:#666
+  color:#666;
+  display: flex;
+  font-size: 32rpx;
 }
-  .alone {
-    background: url("https://mjc224000.top/img/alone.jpg") fixed;
-    color: wheat;
-  }
+.content .wlcolor{
+}
+.content .message{
 
-  .encounter {
-    background: url("https:///mjc224000.top/img/encounter.jpg") fixed;
-    background-position: -150 rpx;
-    color: black
-  }
-
-  .together {
-    background: url("https:///mjc224000.top/img/together.jpg") fixed;
-    background-position: -400 rpx;
-    color: black;
-  }
+}
   .selected{
     transform: translateX(-225rpx);
 
