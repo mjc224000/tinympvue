@@ -8,15 +8,18 @@
         <!--<div class="button-wrap">
           <textarea class="border" cols="20" rows="5"> </textarea>
         </div>-->
-        <form action=""></form>
+         <div>
+       <div class="button-wrap">  <input type="number" size="30" class="small text" v-model="Ttrucks" placeholder="当前车辆"/>   <input  class="button"  type="button" value="完成" ></div>
+         <div class="button-wrap">   <input type="number" size="30" class="small text" v-model="ToperationPoints" placeholder="作业点数量"/>  <input class="button" type="button" value="完成" ></div>
+         </div>
         <div class="button-wrap">
-          <input size="30" style="height: 68rpx;line-height: 68rpx" class="small text" type="text" placeholder="起始"
+          <input size="30"  class="small text" type="text" placeholder="起始"
                  v-model="Tfrom"
                  @confirm="handleFromConfirm"/>
-          <input size="30" style="height: 68rpx;line-height: 68rpx " class="small text" type="text" placeholder="结束"
+          <input size="30" class="small text" type="text" placeholder="结束"
                  v-model="Tto"
                  @confirm="handleToConfirm"/>
-          <input type="button" value="完成" v-on:click="handleSubmit">
+          <input type="button" class="button" value="完成" v-on:click="handleSubmit">
         </div>
         <!--    <button class="button" @click="increment"> 发送消息</button>-->
       </div>
@@ -28,7 +31,6 @@
 <script>
   import store from '@/pages/store';
   import config from '@/config.js';
-
   function asyncReq(option) {
     return new Promise(function (resolve) {
       wx.request({
@@ -41,11 +43,12 @@
       })
     })
   }
-
   export default {
     data: {
       Tfrom: 0,
-      Tto: 0
+      Tto: 0,
+      ToperationPoints:null,
+      Ttrucks:null
     },
     methods: {
       handleFromConfirm(e) {
@@ -114,6 +117,14 @@
 </script>
 
 <style scoped>
+  .button{
+    margin: 0;
+    flex-basis: 20%;
+  }
+input {
+  height: 68rpx;
+  line-height: 68rpx
+}
   .small {
     width: 25%;
   }
@@ -123,8 +134,9 @@
   }
 
   .button-wrap {
+    width: 100%;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
   }
 

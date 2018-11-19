@@ -4,7 +4,7 @@
     <div class="text">
       <div><span style="font-size: 200rpx"> {{ from }} </span></div>
       <div><span style="font-size: 60rpx">至</span></div>
-      <div><span style="font-size: 200rpx"> {{to}} </span></div>
+      <div><span style="font-size: 200rpx" v-bind:style=""> {{to}} </span></div>
     </div>
     <div class="estimate">
       <div v-if="isShow" class="remain">

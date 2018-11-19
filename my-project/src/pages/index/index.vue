@@ -15,7 +15,12 @@
       </div>
     </div>
 
-    <div style="color:red;padding-top:100rpx;margin-bottom: 200rpx;font-size: 60rpx;font-weight: bold"> 柳钢物流园欢迎您</div>
+    <div style="color:red;padding-top:30rpx;margin-bottom: 50rpx;font-size: 60rpx;font-weight: bold"> 柳钢物流园欢迎您</div>
+    <ul style="border:8rpx bisque dashed ;font-size: 70rpx;margin-bottom: 100rpx">
+    <li>  <p> 当前园区车辆80</p> </li>
+     <li> <p> 作业点6</p></li>
+    <li>  <p>目前有40台车正在排队</p> </li>
+    </ul>
     <a v-if="isAuth" href="/pages/message/main?from=index" class="counter btn-gradient">消息管理</a>
     <a v-if="isAuth" href="/pages/broadcast/main" class="counter btn-gradient">牌号管理</a>
   </div>

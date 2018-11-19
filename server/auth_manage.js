@@ -82,7 +82,6 @@ function unAuth(req, res) {
             })
         })
     })
-
 }
 
 function delete_auth(req, res) {
@@ -165,7 +164,6 @@ function auth(req, res) {
         }
 
     })
-
 
 }
 

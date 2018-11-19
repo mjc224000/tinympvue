@@ -1,6 +1,6 @@
 
 const orm = require('orm');
-/*var opts = {
+var opts = {
     host: 'localhost',
     database: 'queue',
     protocol: 'mysql',
@@ -9,9 +9,9 @@ const orm = require('orm');
     username: 'root',
     password: '7898ikuojl'
 };
-let url = 'mysql://root:7898ikuojl@localhost/queue';*/
+let url = 'mysql://root:7898ikuojl@localhost/queue';
 
- let opts = {
+/* let opts = {
     host: 'mjc224000.top',
     database: 'queue',
     protocol: 'mysql',
@@ -20,7 +20,7 @@ let url = 'mysql://root:7898ikuojl@localhost/queue';*/
     username: 'root',
     password: '7898ikuojl'
 };
- url = 'mysql://root:7898ikuojl@mjc224000.top/queue';
+ url = 'mysql://root:7898ikuojl@mjc224000.top/queue';*/
 let Person = {
     personId: {type: 'serial', key: true},
     nickName: String,
@@ -56,7 +56,26 @@ let QueueTime={
     fromNumber: Number,
     toNumber:Number
 }
-
+let Vars={
+    VarId:{
+        type:'serial',key:true
+    },
+    type:String,
+    content: String,
+    style:String,
+    isStatistic:Boolean,
+}
+let Statistic={
+    StatisticsId:{
+        type:'serial',
+        key:true
+    },
+    value:Number,
+    time:{
+        type:'date',
+        time:true
+    }
+}
 
 function initDB() {
     return new Promise(function (resolve, reject) {
@@ -64,9 +83,13 @@ function initDB() {
             let _Person = db.define("person", Person);
             let _Role = db.define("role", Role);
             let _Message=db.define('message',Message);
-             db.define('queueTime',QueueTime);
+           let _Statistic=db.define('statistic',Statistic);
+           let _Var= db.define('var',Vars);
+           let qt= db.define('queueTime',QueueTime);
+            _Statistic.hasOne('var',_Var,{reverse:"var"});
             _Person.hasOne('role', _Role, {reverse: 'user'});
             _Message.hasOne('person',_Person,{reverse:'_from'});
+            qt.hasOne('statistic',_Statistic,{reverse:'queueTime'});
             db.sync(function (err) {
                 if (err) throw err;
                 _Role.find({name: 'admin'}, function (err, doc) {
@@ -78,12 +101,10 @@ function initDB() {
                         _Role.create({name: 'admin'}, function (err) {
                             if (!err)
                                 console.log('admin 创建')
-
                         })
                         _Role.create({name: 'client'}, function (err) {
                             if (!err)
                                 console.log('client 创建')
-
                         })
                     }
                 })
