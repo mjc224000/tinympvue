@@ -4,8 +4,8 @@ router.use(function timeLog(req, res, next) {
     next()
 })
 router.get('/', function (req, res) {
-    let {template} = req.models;
-    template.find({}, function (err, docs) {
+    let {Vars} = req.models;
+    Vars.find({}, function (err, docs) {
         if (err) {
             res.send('not ok')
         } else {
@@ -15,9 +15,9 @@ router.get('/', function (req, res) {
 }).post('/', function (req, res) {
     let data = req.body;
     let {content} = data;
-    let {template} = req.models;
-    if (template && content) {
-        template.create({content}, function (err) {
+    let {Vars} = req.models;
+    if (Vars && content) {
+        Vars.create({content}, function (err) {
             if (!err) {
                 res.send('ok');
             }
@@ -30,9 +30,9 @@ router.get('/', function (req, res) {
     let data = req.body;
     let {content, tplId} = data;
     console.log(data);
-    let {template} = req.models;
-    if (template && content) {
-        template.find({tplId}, function (err, docs) {
+    let {Vars} = req.models;
+    if (Vars && content) {
+        Vars.find({tplId}, function (err, docs) {
             if (!docs[0]) {
                 res.send('not ok');
                 return
@@ -45,9 +45,9 @@ router.get('/', function (req, res) {
 
 }).delete('/', function (req, res) {
     let {tplId} = req.query
-    let {template} = req.models;
-    if (tplId && template) {
-        template.find({tplId}).remove(function (err) {
+    let {Vars} = req.models;
+    if (tplId && Vars) {
+        Vars.find({tplId}).remove(function (err) {
             if(err){
                 res.send('not ok');
                 return

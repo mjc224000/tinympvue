@@ -3,8 +3,8 @@ import BackEndTable from './Table';
 import {Layout} from 'antd';
 import AuthModal from './AuthModal';
 import Menu from './Menu';
-import VarsTable from './Variable';
-import TplTable from './Tpl';
+import VarsTable from './Vars';
+import TplTable from './EditableTable';
 import {BrowserRouter as Router, Route} from "react-router-dom";
 import './App.css';
 import 'antd/dist/antd.css'
