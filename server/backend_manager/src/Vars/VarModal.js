@@ -14,7 +14,7 @@ class AddTempleModal extends React.Component {
         if(content.trim()==''){
             return;
         }
-        axios.post('tpl', {content}).then((res) => {
+        axios.post('var', {content}).then((res) => {
             console.log(res);
         }).then(() => {
             this.props.cancel();
@@ -35,7 +35,12 @@ class AddTempleModal extends React.Component {
                     onOk={this.handleOk}
                     onCancel={this.props.cancel}
                 >
-                    <p>请输入模板内容:</p>
+                    <p>请输入变量参数:</p>
+                    <ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li></ul>
                     <p><input type="text" size={30} value={this.state.content} onChange={this.handleChange}/></p>
 
                 </Modal>

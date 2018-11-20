@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Form, Input, Popconfirm, Table} from 'antd';
-import Addmodal from './TplModal';
+import Addmodal from './VarModal';
 import axios from "../request";
 import './editableTable.css';
 
@@ -117,14 +117,15 @@ class EditableTable extends React.Component {
     }
 
     getList = () => {
-        axios.get('tpl').then((res) => {
+        axios.get('var').then((res) => {
             let data = res.data;
-            data.map((item,index) => {
-                item.index=index;
-                item.key = item.tplId
-                return item
-            })
-            this.setState({data: res.data})
+
+              data.map((item,index) => {
+                    item.index=index;
+                    item.key = item.tplId
+                    return item
+                })
+                this.setState({data: res.data})
         })
     }
     handleDelete = (key) => {
@@ -211,7 +212,7 @@ class EditableTable extends React.Component {
 
         return (
             <div>
-                <p className="top">模板编辑 <Button type={'primary'} onClick={this.show}>添加新的模板</Button></p>
+                <p className="top">变量编辑 <Button type={'primary'} onClick={this.show}>添加新的模板</Button></p>
                 <Table
                     components={components}
                     bordered
