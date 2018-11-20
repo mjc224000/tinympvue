@@ -1,5 +1,6 @@
 let {operator} = require('./utils');
 let tpl_manage=require('./tpl_manage');
+let vars_manage=require('./vars_manage');
 const express = require('express');
 let bodyParser = require('body-parser');
 let queue=require('./queue');
@@ -29,6 +30,7 @@ app.use(function (req, res, next) {
 app.use(check);
 app.use('/queue',queue);
 app.use('/tpl',tpl_manage);
+app.use('/var',vars_manage);
 app.delete('/setRole', delete_auth);
 app.get('/', function (req, res) {
     console.log(req.query);

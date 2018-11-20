@@ -47,14 +47,14 @@ router.get('/', function (req, res) {
     let {tplId} = req.query
     let {template} = req.models;
     if (tplId && template) {
-          template.find({tplId}).remove(function (err) {
-              if(err){
-                  res.send('not ok');
-                  return
-              }else {
-                  res.send('ok');
-              }
-          });
+        template.find({tplId}).remove(function (err) {
+            if(err){
+                res.send('not ok');
+                return
+            }else {
+                res.send('ok');
+            }
+        });
     }
 })
 module.exports = router;
