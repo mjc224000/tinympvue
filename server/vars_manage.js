@@ -7,6 +7,7 @@ router.get('/', function (req, res) {
     let {Vars} = req.models;
     Vars.find({}, function (err, docs) {
         if (err) {
+            console.log(err);
             res.send('not ok')
         } else {
             res.send(docs);
