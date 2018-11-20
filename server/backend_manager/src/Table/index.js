@@ -4,7 +4,7 @@ import axios ,{store}from './../request';
 
 const {Column} = Table;
 
-class BackEndTable extends Component {
+export default class BackEndTable extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -23,17 +23,11 @@ class BackEndTable extends Component {
 
     componentDidMount() {
         if(store('token')){
-            this.setState({isLoginModalShow:false})
-            this.getList();
+            /*this.setState({isLoginModalShow:false})
+            this.getList();*/
         }
     }
-     getList=()=>{
-         axios.get('api/users').then((res) => {
-             let list = res.data.list;
-             list.map((v) => v.key = v.personId)
-             this.setState({list: res.data.list})
-         }).catch((res) => console.log(res));
-     }
+
     closeConfirm = () => {
         this.setState(
             {
@@ -58,27 +52,6 @@ class BackEndTable extends Component {
             });
     }
 
-    loginConfirm = () => {
-        const {pw} = this.state;
-        let that = this;
-        axios.get('login', {
-            params: {
-                pw
-            }
-        }).then(function (res) {
-            if (res.statusText === 'OK') {
-                store('token',res.data)
-                that.getList()
-                that.handleLoginModalCancel();
-            } else {
-
-            }
-        })
-    }
-
-    handlePwChange = (e) => {
-        this.setState({pw: e.target.value});
-    }
 
     confirm = () => {
         let {openid, modalType} = this.state;
@@ -125,7 +98,7 @@ class BackEndTable extends Component {
         }
         return (
             <React.Fragment>
-                <Table dataSource={this.state.list}>
+                <Table dataSource={this.props.list}>
 
                     <Column
                         title="昵称"
@@ -197,18 +170,9 @@ class BackEndTable extends Component {
                         </p> : this.state.msg
                     }
                 </Modal>
-                <Modal title={'登录'}
-                       visible={this.state.isLoginModalShow}
-                       onOk={this.loginConfirm}
-                       onCancel={this.handleLoginModalCancel}>
-                    <div>
-                        密码:<input style={{marginLeft: '20px'}} type="text" value={this.state.pw}
-                                  onChange={this.handlePwChange}/>
-                    </div>
-                </Modal>
+
             </React.Fragment>
         )
     }
 }
 
-export default BackEndTable

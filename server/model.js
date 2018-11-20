@@ -1,4 +1,3 @@
-
 const orm = require('orm');
 var opts = {
     host: 'localhost',
@@ -36,44 +35,50 @@ let Role = {
     roleid: {type: 'serial', key: true},
     name: String
 }
-let Message={
-    messageId:{
-        type:'serial',key:true
+let Message = {
+    messageId: {
+        type: 'serial', key: true
     },
-    message:String,
-    enable:Boolean,
-    title:String,
-    time:{type:'date',time:true},
+    message: String,
+    enable: Boolean,
+    title: String,
+    time: {type: 'date', time: true},
 }
-let QueueTime={
-    queueTimeId:{
-        type:'serial',key:true
+let QueueTime = {
+    queueTimeId: {
+        type: 'serial', key: true
     },
-    time:{
-        type:'date',
-        time:true
+    time: {
+        type: 'date',
+        time: true
     },
     fromNumber: Number,
-    toNumber:Number
+    toNumber: Number
 }
-let Vars={
-    VarId:{
-        type:'serial',key:true
+let Vars = {
+    varId: {
+        type: 'serial', key: true
     },
-    type:String,
+    type: String,
+    latest_value: String,
+    disc: String,
+    symbol:String
+}
+let Tpl = {
+    tplId: {
+        type: 'serial', key: true
+    },
     content: String,
-    style:String,
-    isStatistic:Boolean,
 }
-let Statistic={
-    StatisticsId:{
-        type:'serial',
-        key:true
+let Statistic = {
+    StatisticsId: {
+        type: 'serial',
+        key: true
     },
-    value:Number,
-    time:{
-        type:'date',
-        time:true
+    value: Number,
+    time: {
+        type: 'date',
+        time: true
     }
 }
 
@@ -82,14 +87,15 @@ function initDB() {
         orm.connectAsync(opts).then(function (db) {
             let _Person = db.define("person", Person);
             let _Role = db.define("role", Role);
-            let _Message=db.define('message',Message);
-           let _Statistic=db.define('statistic',Statistic);
-           let _Var= db.define('var',Vars);
-           let qt= db.define('queueTime',QueueTime);
-            _Statistic.hasOne('var',_Var,{reverse:"var"});
+            let _Message = db.define('message', Message);
+            let _Statistic = db.define('statistic', Statistic);
+            let _Var = db.define('var', Vars);
+            db.define('template',Tpl);
+            let qt = db.define('queueTime', QueueTime);
+            _Statistic.hasOne('var', _Var, {reverse: "var"});
             _Person.hasOne('role', _Role, {reverse: 'user'});
-            _Message.hasOne('person',_Person,{reverse:'_from'});
-            qt.hasOne('statistic',_Statistic,{reverse:'queueTime'});
+            _Message.hasOne('person', _Person, {reverse: '_from'});
+            qt.hasOne('statistic', _Statistic, {reverse: 'queueTime'});
             db.sync(function (err) {
                 if (err) throw err;
                 _Role.find({name: 'admin'}, function (err, doc) {
@@ -118,13 +124,15 @@ function define(db, models, next) {
     let _Person = db.define("person", Person);
     let _Role = db.define("role", Role);
     _Person.hasOne('role', _Role, {reverse: 'user'});
-    let _Message=db.define('message',Message);
-    let _QueueTime=db.define('queueTime',QueueTime);
+    let _Message = db.define('message', Message);
+    let _QueueTime = db.define('queueTime', QueueTime);
+    let _template=db.define('template',Tpl);
     if (models) {
         models.person = _Person;
         models.role = _Role;
-        models.message=_Message;
-        models.queueTime=_QueueTime
+        models.message = _Message;
+        models.queueTime = _QueueTime;
+        models.template=_template;
         next();
     }
 }

@@ -30,7 +30,6 @@
   import card from '@/components/card'
   import config from '@/config.js';
   import store from '@/pages/store'
-
   export default {
     data() {
       return {
@@ -38,7 +37,6 @@
         userInfo: {}
       }
     },
-
     components: {
       card
     },

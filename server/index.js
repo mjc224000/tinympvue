@@ -1,4 +1,5 @@
 let {operator} = require('./utils');
+let tpl_manage=require('./tpl_manage');
 const express = require('express');
 let bodyParser = require('body-parser');
 let queue=require('./queue');
@@ -9,9 +10,7 @@ let http = require('http');
 const {auth, setRole, showUsers, unAuth, delete_auth, check, login} = require('./auth_manage');
 const {message,deleteMessage,messageList,putMessage}=require('./msg_manager');
 const options = require('./option');
-let currentNumber = 0;
 let app = express();
-let from=0,to=0;
 app.use('/img',express.static('./img'));
 app.use(function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", '*');
@@ -29,6 +28,7 @@ app.use(function (req, res, next) {
 });
 app.use(check);
 app.use('/queue',queue);
+app.use('/tpl',tpl_manage);
 app.delete('/setRole', delete_auth);
 app.get('/', function (req, res) {
     console.log(req.query);
@@ -37,31 +37,12 @@ app.get('/', function (req, res) {
 app.get('/setRole', setRole)
 app.get('/auth', auth);
 app.get('/api/users', showUsers);
-app.get('/update', function (req, res) {
-    currentNumber = req.query.updateNumber;
-    console.log(req.query);
-    res.send('ok');
-});
-app.get('/currentNumber', function (req, res) {
-    res.send(currentNumber.toString());
-})
+
 app.get('/login', login);
 // 后台管理，取消管理员权限。
+
 app.get('/unAuth', unAuth);
-// 废弃
-app.get('/updateFrom', function (req, res) {
-    from = req.query.fromNumber;
-    res.send('ok');
-});
-// 废弃
-app.get('/updateTo',function (req,res) {
-    to=req.query.toNumber;
-    res.send('ok');
-});
-// 废弃
-app.get('/fromToNumber', function (req, res) {
-    res.json({from, to});
-})
+
 // msg relevant
 app.get('/msg',message);
 app.put('/msg',putMessage);
