@@ -127,14 +127,14 @@ function define(db, models, next) {
     let _Message = db.define('message', Message);
     let _QueueTime = db.define('queueTime', QueueTime);
     let _template=db.define('template',Tpl);
-    let _Vars=db.define('vars',Vars);
+    let _Vars=db.define('var',Vars);
     if (models) {
         models.person = _Person;
         models.role = _Role;
         models.message = _Message;
         models.queueTime = _QueueTime;
         models.template=_template;
-        models.vars=_Vars;
+        models.Vars=_Vars;
         next();
     }
 }
