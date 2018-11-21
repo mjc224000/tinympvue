@@ -62,7 +62,7 @@ let Vars = {
     type: String,
     latest_value: String,
     disc: String,
-    symbol:String
+    symbol: String
 }
 let Tpl = {
     tplId: {
@@ -75,6 +75,8 @@ let Statistic = {
         type: 'serial',
         key: true
     },
+    type: String
+    ,
     value: Number,
     time: {
         type: 'date',
@@ -90,7 +92,7 @@ function initDB() {
             let _Message = db.define('message', Message);
             let _Statistic = db.define('statistic', Statistic);
             let _Var = db.define('var', Vars);
-            db.define('template',Tpl);
+            db.define('template', Tpl);
             let qt = db.define('queueTime', QueueTime);
             _Statistic.hasOne('var', _Var, {reverse: "var"});
             _Person.hasOne('role', _Role, {reverse: 'user'});
@@ -126,15 +128,17 @@ function define(db, models, next) {
     _Person.hasOne('role', _Role, {reverse: 'user'});
     let _Message = db.define('message', Message);
     let _QueueTime = db.define('queueTime', QueueTime);
-    let _template=db.define('template',Tpl);
-    let _Vars=db.define('var',Vars);
+    let _template = db.define('template', Tpl);
+    let _Vars = db.define('var', Vars);
+    let _Statistic = db.define('statistic', Statistic);
     if (models) {
         models.person = _Person;
         models.role = _Role;
         models.message = _Message;
         models.queueTime = _QueueTime;
-        models.template=_template;
-        models.Vars=_Vars;
+        models.template = _template;
+        models.Vars = _Vars;
+        models.statistic = _Statistic;
         next();
     }
 }

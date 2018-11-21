@@ -8,3 +8,9 @@
      display:flex;
      justify-content: space-around;
  }
+.vars-form li{
+    width:80%;
+    display: flex;
+    margin-bottom: 5px;
+    justify-content: space-between;
+}

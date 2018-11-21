@@ -15,10 +15,11 @@ router.get('/', function (req, res) {
     })
 }).post('/', function (req, res) {
     let data = req.body;
-    let {content} = data;
+    let {type, disc, symbol,} = data;
     let {Vars} = req.models;
-    if (Vars && content) {
-        Vars.create({content}, function (err) {
+    if (Vars && type) {
+        Vars.create({type, disc, symbol,latest_value: 0}, function (err) {
+            console.log(err);
             if (!err) {
                 res.send('ok');
             }
@@ -26,33 +27,32 @@ router.get('/', function (req, res) {
     } else {
         res.send('not ok');
     }
-
 }).put("/", function (req, res) {
     let data = req.body;
-    let {content, tplId} = data;
-    console.log(data);
+    let {type, varId, disc,symbol,} = data;
     let {Vars} = req.models;
-    if (Vars && content) {
-        Vars.find({tplId}, function (err, docs) {
+    if (Vars && type && disc) {
+        Vars.find({varId}, function (err, docs) {
             if (!docs[0]) {
                 res.send('not ok');
                 return
             }
-            docs[0].content = content;
+            docs[0].type = type;
+            docs[0].disc = disc;
+            docs[0].symbol = symbol;
             docs[0].save();
             res.send('ok');
         })
     }
-
 }).delete('/', function (req, res) {
-    let {tplId} = req.query
+    let {varId} = req.query
     let {Vars} = req.models;
-    if (tplId && Vars) {
-        Vars.find({tplId}).remove(function (err) {
-            if(err){
+    if (varId && Vars) {
+        Vars.find({varId}).remove(function (err) {
+            if (err) {
                 res.send('not ok');
                 return
-            }else {
+            } else {
                 res.send('ok');
             }
         });

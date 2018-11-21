@@ -8,6 +8,7 @@ const model = require('./model');
 const orm = require('orm');
 let https = require('https');
 let http = require('http');
+let statistic_manage=require('./statistic_manage');
 const {auth, setRole, showUsers, unAuth, delete_auth, check, login} = require('./auth_manage');
 const {message,deleteMessage,messageList,putMessage}=require('./msg_manager');
 const options = require('./option');
@@ -31,6 +32,7 @@ app.use(check);
 app.use('/queue',queue);
 app.use('/tpl',tpl_manage);
 app.use('/var',vars_manage);
+app.use('/statistic',statistic_manage);
 app.delete('/setRole', delete_auth);
 app.get('/', function (req, res) {
     console.log(req.query);

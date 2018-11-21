@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, Form, Input, Popconfirm, Table} from 'antd';
 import Addmodal from './VarModal';
 import axios from "../request";
-import './editableTable.css';
+import './vars.css';
 
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
@@ -65,11 +65,23 @@ class EditableTable extends React.Component {
                 editable: false,
             },
             {
-                title: '内容',
-                dataIndex: 'content',
-                width: '50%',
+                title: '类型',
+                dataIndex: 'type',
+                width: '15%',
                 editable: true,
             },
+            {
+                title:'描述',
+                dataIndex:'disc',
+                width: '40%',
+                editable: true,
+            },   {
+                title:'表征符号',
+                dataIndex:'symbol',
+                width: '15%',
+                editable: true,
+            }
+            ,
             {
                 title: 'operation',
                 dataIndex: 'operation',
@@ -121,17 +133,17 @@ class EditableTable extends React.Component {
             let data = res.data;
 
               data.map((item,index) => {
-                    item.index=index;
-                    item.key = item.tplId
+                    item.index=index+1;
+                    item.key = item.varId
                     return item
                 })
                 this.setState({data: res.data})
         })
     }
     handleDelete = (key) => {
-        axios.delete('tpl', {
+        axios.delete('var', {
             params: {
-                tplId: key
+                varId: key
             }
         }).then((res) => {
             if (res.data === 'ok') {
@@ -160,11 +172,10 @@ class EditableTable extends React.Component {
             }
             const newData = [...this.state.data];
             const index = newData.findIndex(item => key === item.key);
-
             if (index > -1) {
                 const item = newData[index];
                 console.log(item, row);
-                axios.put('tpl', {
+                axios.put('var', {
                     ...item,
                     ...row,
                 }).then(() => {
@@ -188,6 +199,7 @@ class EditableTable extends React.Component {
     };
 
     render() {
+
         const components = {
             body: {
                 row: EditableFormRow,
@@ -212,7 +224,7 @@ class EditableTable extends React.Component {
 
         return (
             <div>
-                <p className="top">变量编辑 <Button type={'primary'} onClick={this.show}>添加新的模板</Button></p>
+                <p className="top">变量编辑 <Button type={'primary'} onClick={this.show}>添加新的变量</Button></p>
                 <Table
                     components={components}
                     bordered

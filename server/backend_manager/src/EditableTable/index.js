@@ -56,7 +56,7 @@ class EditableCell extends React.Component {
 class EditableTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {data: [], editingKey: '', visible: false, newContent: ''};
+        this.state = {data: [], editingKey: '', visible: false, newContent: '', vars: []};
         this.columns = [
             {
                 title: '序号',
@@ -70,6 +70,12 @@ class EditableTable extends React.Component {
                 width: '50%',
                 editable: true,
             },
+            {
+                title: 'compose',
+                dataIndex: 'compose',
+                editable: false
+            }
+            ,
             {
                 title: 'operation',
                 dataIndex: 'operation',
@@ -114,13 +120,23 @@ class EditableTable extends React.Component {
 
     componentDidMount() {
         this.getList();
+        this.getVars();
+        axios.post('statistic',{type:'trucks',value:2}).then(res=>{
+            console.log(res);
+        })
     }
 
+    getVars = () => {
+        return axios.get('var').then(res => {
+            console.log(res.data);
+            this.setState({vars: res.data});
+        })
+    }
     getList = () => {
         axios.get('tpl').then((res) => {
             let data = res.data;
-            data.map((item,index) => {
-                item.index=index;
+            data.map((item, index) => {
+                item.index = index + 1;
                 item.key = item.tplId
                 return item
             })
@@ -139,7 +155,7 @@ class EditableTable extends React.Component {
         })
     }
     show = () => {
-        this.setState({visible: true});
+        this.getVars().then(() => this.setState({visible: true}))
     }
     closeModal = () => {
         this.setState({visible: false})
@@ -182,6 +198,13 @@ class EditableTable extends React.Component {
         });
     }
 
+    compose = (string, vars) => {
+        console.log(string, vars);
+        for (let i = 0; i < vars.length; i++) {
+           string= string.replace(vars[i].symbol, vars[i].latest_value);
+        }
+        return string;
+    }
     cancel = () => {
         this.setState({editingKey: ''});
     };
@@ -208,18 +231,24 @@ class EditableTable extends React.Component {
                 }),
             };
         });
-
+        let tbList = this.state.data;
+        tbList = tbList.map((item) => {
+            let content = item.content;
+            item.compose = this.compose(content, this.state.vars);
+            return item
+        })
         return (
             <div>
                 <p className="top">模板编辑 <Button type={'primary'} onClick={this.show}>添加新的模板</Button></p>
                 <Table
                     components={components}
                     bordered
-                    dataSource={this.state.data}
+                    dataSource={tbList}
                     columns={columns}
                     rowClassName="editable-row"
                 />
-                <Addmodal visible={this.state.visible} cancel={this.closeModal} getList={this.getList}/>
+                <Addmodal visible={this.state.visible} cancel={this.closeModal} getList={this.getList}
+                          vars={this.state.vars}/>
             </div>
 
         );
