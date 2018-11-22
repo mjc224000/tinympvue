@@ -131,6 +131,7 @@ function define(db, models, next) {
     let _template = db.define('template', Tpl);
     let _Vars = db.define('var', Vars);
     let _Statistic = db.define('statistic', Statistic);
+     _Statistic.hasOne('var',_Vars);
     if (models) {
         models.person = _Person;
         models.role = _Role;

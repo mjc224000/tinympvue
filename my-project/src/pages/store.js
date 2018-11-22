@@ -11,25 +11,20 @@ const store = new Vuex.Store({
     token: null,
     from: 0,
     to: 0,
-    messageList:[]
+    messageList:[],
+    vars:[]
   },
   mutations: {
 
-    updateNumber(state, stark) {
-      let {from, to} = stark;
-      from = parseInt(from);
-      to = parseInt(to);
-      state.from = from;
-      state.to = to
-    },
-    updateFrom(state, stark) {
-      stark = parseInt(stark);
-      state.from = stark;
-    },
-    updateTo(state, stark) {
-      stark = parseInt(stark);
-      state.to = stark
-    }
+   getVars(state){
+     wx.request({
+       url:config.var,
+       success(res){
+         console.log(res,'from get vars');
+       }
+     })
+
+   }
     ,
     auth(state, stark) {
       state.auth = true;
@@ -47,17 +42,6 @@ const store = new Vuex.Store({
         success(res) {
           let list = res.data;
           list.forEach((v, i) => {
-         /*   switch (i % 3) {
-              case 0:
-                v.listClass = true;
-                break;
-              case 1:
-                v.wallClass = true;
-                break;
-              case 2:
-                v.princeClass = true;
-                break;
-            }*/
             v.index=i+1;
             v.subMessage=v.message.substring(0,45);
             v.title=v.title.substring(0,20);
@@ -65,7 +49,6 @@ const store = new Vuex.Store({
               v.subMessage=v.subMessage+'...';
             }
           })
-
           state.messageList=list;
         }
       })

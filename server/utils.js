@@ -42,4 +42,28 @@ function operator(models) {
     return subject
 }
 
-module.exports={operator}
+function validate() {
+    let flag = true;
+    for (let i = 0; i < arguments.length; i++) {
+        let arg = arguments[i];
+        if (arg !== arg) {
+            return false
+        }
+        if (typeof arg === 'undefined') {
+            return false;
+        }
+        if (typeof arg === "string") {
+            if (arg.trim() === '') {
+                return false
+            } else {
+                continue
+            }
+        }
+        if (typeof arg === "number") {
+            continue
+        }
+    }
+    return flag
+}
+
+module.exports = {operator, validate}

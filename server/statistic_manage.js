@@ -24,7 +24,6 @@ router.get('/', function (req, res) {
 }).post('/', function (req, res) {
     let {statistic, Vars} = req.models;
     let {type, value} = req.body;
-
     // 找到提交的变量类型
     Vars.find({type}, function (err, vars) {
         let _var = vars[0];
@@ -33,9 +32,13 @@ router.get('/', function (req, res) {
             //更新这个变量的最新值
             _var.save(function (err) {
                 if (!err) {
-                    statistic.create({type, value, time: new Date()}, function (err) {
+                    statistic.create({type, value, time: new Date()}, function (err, doc) {
                         if (!err) {
-                            res.send('ok')
+                            doc.setVar(_var, function (err) {
+                                if (!err) {
+                                    res.send('ok');
+                                }
+                            })
                         }
                     })
                 }
@@ -43,5 +46,7 @@ router.get('/', function (req, res) {
         }
     })
     // statistic.create({type,value});
-})
+}).get('/vars',function (req,res) {
+    res.send('a');
+});
 module.exports = router;

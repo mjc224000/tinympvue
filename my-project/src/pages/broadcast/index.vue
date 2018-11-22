@@ -1,29 +1,24 @@
 <template>
   <div>
+    <ul>
+      <li v-for="item in tpl" :key="item">
+        <p style="color:#72aaa7">{{item}}</p>
+      </li>
+    </ul>
     <p class="top">
-      当前号码为 <span style="color:red;font-size: 60rpx;">{{from}}-{{to}} </span>,请位于此号码之间的司机来领发货单
+
     </p>
-    <div>
-      <div class="bottom">
-        <!--<div class="button-wrap">
-          <textarea class="border" cols="20" rows="5"> </textarea>
-        </div>-->
-         <div>
-       <div class="button-wrap">  <input type="number" size="30" class="small text" v-model="Ttrucks" placeholder="当前车辆"/>   <input  class="button"  type="button" value="完成" ></div>
-         <div class="button-wrap">   <input type="number" size="30" class="small text" v-model="ToperationPoints" placeholder="作业点数量"/>  <input class="button" type="button" value="完成" ></div>
-         </div>
+    <ul style="margin-top: 100rpx">
+      <li v-for="item in varList" :key="item.varId">
         <div class="button-wrap">
-          <input size="30"  class="small text" type="text" placeholder="起始"
-                 v-model="Tfrom"
-                 @confirm="handleFromConfirm"/>
-          <input size="30" class="small text" type="text" placeholder="结束"
-                 v-model="Tto"
-                 @confirm="handleToConfirm"/>
-          <input type="button" class="button" value="完成" v-on:click="handleSubmit">
+          <div style="display: flex;width: 70%;justify-content: space-between">
+            <p> {{item.disc}}:</p>
+            <input type="number" class="small text" v-model=" item['value']">
+          </div>
+          <input class="button" type="button" value="完成" v-on:click="()=>handleSubmit(item)"/>
         </div>
-        <!--    <button class="button" @click="increment"> 发送消息</button>-->
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
 
 </template>
@@ -31,102 +26,83 @@
 <script>
   import store from '@/pages/store';
   import config from '@/config.js';
-  function asyncReq(option) {
-    return new Promise(function (resolve) {
-      wx.request({
-        ...option,
-        success(res) {
-          if (res.data === 'ok') {
-            resolve(res);
-          }
-        }
-      })
-    })
-  }
+
   export default {
     data: {
-      Tfrom: 0,
-      Tto: 0,
-      ToperationPoints:null,
-      Ttrucks:null
-    },
+      varList: [],
+      tpl:[]
+    }  ,
     methods: {
-      handleFromConfirm(e) {
-        let reg = /^0-9/;
-        let value = e.target.value;
-        console.log(value);
-        if (reg.test(value)) return;
-        asyncReq({
-          url: config.from,
-          method: 'put',
-          data: {from: value}
-        }).then(() => store.commit('updateFrom', value));
-      }
-      ,
-      handleToConfirm(e) {
-        let reg = /^0-9/;
-        let value = e.target.value;
-        if (reg.test(value)) return;
-        asyncReq({
-          url: config.to,
-          method: 'put',
-          data: {to: value}
-        }).then(() => store.commit('updateTo', value))
-      },
-      handleSubmit() {
-        let {Tfrom, Tto} = this;
-        if (+Tfrom > +Tto) {
-          return
-        }
-        let reg = /[^0-9]/;
-        if (reg.test(Tfrom) || reg.test(Tto)) {
-          return
-        }
-        asyncReq({
-          url: config.queue,
-          method: 'put',
-          data: {
-            from: Tfrom,
-            to: Tto
+      handleSubmit(item) {
+        let token = store.state.token;
+        console.log(item);
+        let that=this;
+        wx.request({
+          url: config.statistic,
+          method: "post",
+          header: {
+            "Authorization": token, "Content-Type": "application/x-www-form-urlencoded"
+          },
+          data: item,
+          success() {
+             that.getTpl();
           }
-        }).then(() => store.commit('updateNumber', {from: Tfrom, to: Tto}))
+        })
       },
-    },
-    created() {
-      let that=this;
-      wx.request({
-        url: config.queue,
-        success(res) {
-          let {from,to}=res.data;
-          store.commit('updateNumber', {from,to});
-          console.log(from,to,'create')
-          that.Tfrom=from;
-          that.Tto=to;
-        }
-      })
-    },
-    computed: {
-      from() {
-        return store.state.from
+      getList() {
+        let that = this;
+        wx.request(
+          {
+            url: config.var, method: 'get',
+            header: {
+              "Authorization": store.state.token, "Content-Type": "application/x-www-form-urlencoded"
+            },
+            success(res) {
+              let data = res.data || [];
+              data.forEach((v, i) => {
+                v.index = i;
+                v.value = v.latest_value;
+              });
+              that.varList = data;
+            }
+          })
       },
-      to() {
-        return store.state.to
+      getTpl() {
+        let that=this;
+        wx.request({
+          url: config.statistic,
+          method: 'get',
+          success(res) {
+            console.log(res.data);
+            let tpls=res.data;
+            tpls=tpls.map((v)=>v.compose);
+            that.tpl=tpls;
+            console.log(tpls);
+          }
+        })
       }
-    }
+    },
+    onShow() {
+
+      this.getList();
+      this.getTpl();
+    },
   }
 </script>
 
 <style scoped>
-  .button{
+  .button {
     margin: 0;
     flex-basis: 20%;
   }
-input {
-  height: 68rpx;
-  line-height: 68rpx
-}
+
+  input {
+    height: 68 rpx;
+    line-height: 68 rpx
+  }
+
   .small {
-    width: 25%;
+    width: 15%;
   }
 
   .border {
@@ -152,14 +128,14 @@ input {
   }
 
   .top {
-    text-indent: 70rpx;
-    padding-top: 100rpx;
+    text-indent: 70 rpx;
+    padding-top: 100 rpx;
   }
 
   .bottom {
     width: 100%;
     position: fixed;
-    bottom: 200rpx;
+    bottom: 200 rpx;
   }
 
   .button {

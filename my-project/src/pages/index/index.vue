@@ -16,10 +16,10 @@
     </div>
 
     <div style="color:red;padding-top:30rpx;margin-bottom: 50rpx;font-size: 60rpx;font-weight: bold"> 柳钢物流园欢迎您</div>
-    <ul style="border:8rpx bisque dashed ;font-size: 70rpx;margin-bottom: 100rpx">
-    <li>  <p> 当前园区车辆80</p> </li>
-     <li> <p> 作业点6</p></li>
-    <li>  <p>目前有40台车正在排队</p> </li>
+    <ul style="border:8rpx bisque dashed ;font-size: 40rpx;margin-bottom: 100rpx">
+     <li v-for="item in tpl" :key="item.tplId">
+      <p>{{item.compose}}</p>
+     </li>
     </ul>
     <a v-if="isAuth" href="/pages/message/main?from=index" class="counter btn-gradient">消息管理</a>
     <a v-if="isAuth" href="/pages/broadcast/main" class="counter btn-gradient">牌号管理</a>
@@ -33,7 +33,7 @@
   export default {
     data() {
       return {
-        motto: 'Hello World',
+      tpl:[],
         userInfo: {}
       }
     },
@@ -46,15 +46,10 @@
     computed: {
       isAuth() {
         return store.state.auth;
-      },
-      banner(){
-        return store.state.messageList[0] && store.state.messageList[0].message || '';
       }
     }
     ,
-
     methods: {
-
       bindGetUserInfo(e) {
         console.log(e, 'user info');
         let that = this;
@@ -83,9 +78,35 @@
             })// end request
           }
         })
+      },
+      getTpl(){
+        let that=this;
+        wx.request({
+          url: config.statistic,
+          method: 'get',
+          success(res) {
+            console.log(res.data);
+            that.tpl = res.data;
+          }
+        });
+      },
+      tst(){
+        let that=this;
+        wx.request({
+          url: config.statistic+'/vars',
+          method: 'get',
+          success(res) {
+            console.log(res.data);
+            that.tpl = res.data;
+          }
+        });
       }
     },
-
+    onShow(){
+      this.getTpl();
+      setTimeout(()=>this.getTpl(),6000);
+      setTimeout(()=>this.tst)
+    },
     created() {
       // 调用应用实例的方法获取全局数据
       let that=this;

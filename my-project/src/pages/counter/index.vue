@@ -32,8 +32,7 @@
     },
     computed: {
       remain() {
-        ;
-        let {from, to, queueNumber} = this;
+      let {from, to, queueNumber} = this;
         console.log(from, to, queueNumber)
         if (queueNumber < +from) {
           return '您已过号，请咨询开单室';
@@ -68,27 +67,8 @@
     },
     created() {
       let that = this;
-      wx.request({
-        url: config.queue,
-        method: 'get',
-        success: function (res) {
-          const {from, to} = res.data;
-          that.from = from;
-          that.to = to
-        }
-      })
-      setInterval(function () {
-        wx.request({
-          url: config.queue,
-          method: 'get',
-          success: function (res) {
-            const {from, to} = res.data;
-            that.from = from;
-            that.to = to;
-            store.commit('updateNumber', {from, to})
-          }
-        })
-      }, 6000)
+    setTimeout(()=>store.commit('getVars'),1000) ;
+
     }
   }
 </script>

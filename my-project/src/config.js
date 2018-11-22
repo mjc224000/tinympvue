@@ -10,5 +10,7 @@ export default {
   from:url+'queue/from',
   to:url+'queue/to',
   queue:url+'queue',
-  url
+  url,
+  statistic:url+'statistic',
+  var:url+'var'
 }
