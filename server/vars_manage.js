@@ -5,7 +5,7 @@ router.use(function timeLog(req, res, next) {
 })
 router.get('/', function (req, res) {
     let {Vars} = req.models;
-    Vars.find({}, function (err, docs) {
+    Vars.find({isshow:true}, function (err, docs) {
         if (err) {
             console.log(err);
             res.send('not ok')
@@ -29,7 +29,8 @@ router.get('/', function (req, res) {
     }
 }).put("/", function (req, res) {
     let data = req.body;
-    let {type, varId, disc,symbol,} = data;
+    let {type, varId, disc,symbol,isshow,} = data;
+    console.log(isshow);
     let {Vars} = req.models;
     if (Vars && type && disc) {
         Vars.find({varId}, function (err, docs) {
@@ -40,6 +41,7 @@ router.get('/', function (req, res) {
             docs[0].type = type;
             docs[0].disc = disc;
             docs[0].symbol = symbol;
+            docs[0].isshow=isshow;
             docs[0].save();
             res.send('ok');
         })

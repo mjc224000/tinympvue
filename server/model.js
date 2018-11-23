@@ -62,7 +62,8 @@ let Vars = {
     type: String,
     latest_value: String,
     disc: String,
-    symbol: String
+    symbol: String,
+    isshow:Boolean
 }
 let Tpl = {
     tplId: {

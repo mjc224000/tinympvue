@@ -12,20 +12,31 @@ const store = new Vuex.Store({
     from: 0,
     to: 0,
     messageList:[],
-    vars:[]
+    vars:[],
+    templates:[]
   },
   mutations: {
 
    getVars(state){
      wx.request({
-       url:config.var,
+       url:config.statistic+'/vars',
        success(res){
-         console.log(res,'from get vars');
+         state.vars=res.data;
        }
      })
 
    }
     ,
+    getTemplates(state){
+     wx.request({
+       url:config.statistic+'/templates',
+       success(res){
+     console.log(res.data,'templates');
+     state.templates=res.data;
+       }
+     })
+    }
+  ,
     auth(state, stark) {
       state.auth = true;
       state.token = stark;

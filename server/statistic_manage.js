@@ -4,7 +4,7 @@ router.use(function timeLog(req, res, next) {
     next()
 })
 let compose = (string, vars) => {
-    console.log(string, vars);
+    vars = vars || [];
     for (let i = 0; i < vars.length; i++) {
         string = string.replace(vars[i].symbol, vars[i].latest_value);
     }
@@ -46,7 +46,31 @@ router.get('/', function (req, res) {
         }
     })
     // statistic.create({type,value});
-}).get('/vars',function (req,res) {
-    res.send('a');
-});
+}).get('/vars', function (req, res) {
+    let {Vars} = req.models;
+    Vars.find({}, function (err, docs) {
+        if (err) {
+            res.send('not ok')
+        } else {
+            docs = docs || [];
+            let ret = {};
+            docs.forEach((item) => {
+
+                ret[item.type] = item.latest_value;
+
+            })
+            res.send(ret);
+        }
+    })
+}).get('/templates', function (req, res) {
+    let {template} = req.models;
+    template.find({}, function (err, docs) {
+        if (err) {
+            res.send('not ok');
+        } else {
+            res.send(docs);
+        }
+    })
+})
+;
 module.exports = router;

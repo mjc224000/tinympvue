@@ -1,9 +1,13 @@
 import React from 'react';
-import {Button, Form, Input, Popconfirm, Table} from 'antd';
+import {Button, Form, Input, Popconfirm, Table,InputNumber,Checkbox } from 'antd';
 import Addmodal from './VarModal';
 import axios from "../request";
 import './vars.css';
-
+class MyCheck extends React.Component{
+    render(){
+        return <Checkbox checked={this.props.value} {...this.props}/>
+    }
+}
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
 
@@ -13,12 +17,18 @@ const EditableRow = ({form, index, ...props}) => (
     </EditableContext.Provider>
 );
 const EditableFormRow = Form.create()(EditableRow);
-
+// 判定在可编辑状态下的component是啥
 class EditableCell extends React.Component {
     getInput = () => {
 
-        return <Input/>;
-    };
+        if (this.props.inputType === 'number') {
+            return <InputNumber />;
+        }
+        if(this.props.dataIndex==='isshow'){
+            return <MyCheck/>
+        }
+        return <Input />;
+    }
 
     render() {
         const {
@@ -28,6 +38,7 @@ class EditableCell extends React.Component {
             record,
             ...restProps
         } = this.props;
+
         return (
             <EditableContext.Consumer>
                 {(form) => {
@@ -75,7 +86,18 @@ class EditableTable extends React.Component {
                 dataIndex:'disc',
                 width: '40%',
                 editable: true,
-            },   {
+            },  {
+                title:'是否显示',
+                dataIndex:'isshow',
+                with:'5%',
+                editable:true ,
+           render:(text,record)=>{
+
+                    const editable = this.isEditing(record);
+                   return ( editable?undefined
+                       :<Checkbox checked={text} disabled/>  )
+                }
+            }, {
                 title:'表征符号',
                 dataIndex:'symbol',
                 width: '15%',
@@ -87,6 +109,7 @@ class EditableTable extends React.Component {
                 dataIndex: 'operation',
                 width: '10%',
                 render: (text, record) => {
+
                     const editable = this.isEditing(record);
                     return (
                         <div>
@@ -132,7 +155,7 @@ class EditableTable extends React.Component {
         axios.get('var').then((res) => {
             let data = res.data;
 
-              data.map((item,index) => {
+            data.map((item,index) => {
                     item.index=index+1;
                     item.key = item.varId
                     return item
@@ -174,7 +197,7 @@ class EditableTable extends React.Component {
             const index = newData.findIndex(item => key === item.key);
             if (index > -1) {
                 const item = newData[index];
-                console.log(item, row);
+
                 axios.put('var', {
                     ...item,
                     ...row,
@@ -211,6 +234,7 @@ class EditableTable extends React.Component {
             if (!col.editable) {
                 return col;
             }
+
             return {
                 ...col,
                 onCell: record => ({
@@ -218,6 +242,7 @@ class EditableTable extends React.Component {
                     dataIndex: col.dataIndex,
                     title: col.title,
                     editing: this.isEditing(record),
+
                 }),
             };
         });

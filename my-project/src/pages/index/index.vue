@@ -16,11 +16,7 @@
     </div>
 
     <div style="color:red;padding-top:30rpx;margin-bottom: 50rpx;font-size: 60rpx;font-weight: bold"> 柳钢物流园欢迎您</div>
-    <ul style="border:8rpx bisque dashed ;font-size: 40rpx;margin-bottom: 100rpx">
-     <li v-for="item in tpl" :key="item.tplId">
-      <p>{{item.compose}}</p>
-     </li>
-    </ul>
+    <div style="min-height: 200rpx"></div>
     <a v-if="isAuth" href="/pages/message/main?from=index" class="counter btn-gradient">消息管理</a>
     <a v-if="isAuth" href="/pages/broadcast/main" class="counter btn-gradient">牌号管理</a>
   </div>
@@ -30,10 +26,11 @@
   import card from '@/components/card'
   import config from '@/config.js';
   import store from '@/pages/store'
+
   export default {
     data() {
       return {
-      tpl:[],
+        tpl: [],
         userInfo: {}
       }
     },
@@ -66,55 +63,30 @@
               },
               success(res) {
                 if (res.data.userType === 1) {
-               let token= res.data.token;
-                  store.commit('auth',token);
-                  console.log('有权限',res)
-                //  wx.navigateTo({url: '/pages/broadcast/main'})
+                  let token = res.data.token;
+                  store.commit('auth', token);
+                  console.log('有权限', res)
+                  //  wx.navigateTo({url: '/pages/broadcast/main'})
                 } else {
-                  console.log('我没有权限',res)
-                 // wx.navigateTo({url: '/pages/counter/main'})
+                  console.log('我没有权限', res)
+                  // wx.navigateTo({url: '/pages/counter/main'})
                 }
               }
             })// end request
           }
         })
       },
-      getTpl(){
-        let that=this;
-        wx.request({
-          url: config.statistic,
-          method: 'get',
-          success(res) {
-            console.log(res.data);
-            that.tpl = res.data;
-          }
-        });
-      },
-      tst(){
-        let that=this;
-        wx.request({
-          url: config.statistic+'/vars',
-          method: 'get',
-          success(res) {
-            console.log(res.data);
-            that.tpl = res.data;
-          }
-        });
-      }
-    },
-    onShow(){
-      this.getTpl();
-      setTimeout(()=>this.getTpl(),6000);
-      setTimeout(()=>this.tst)
-    },
+
+    }
+    ,
     created() {
       // 调用应用实例的方法获取全局数据
-      let that=this;
+      let that = this;
       wx.getUserInfo({
-        success(res){
-        that.userInfo=res.userInfo;
+        success(res) {
+          that.userInfo = res.userInfo;
         },
-        fail(e){
+        fail(e) {
         }
       })
       wx.login({
@@ -129,12 +101,12 @@
             },
             success(res) {
               if (res.data.userType === 1) {
-                let token= res.data.token;
-                store.commit('auth',token);
-                console.log('有权限',res)
+                let token = res.data.token;
+                store.commit('auth', token);
+                console.log('有权限', res)
                 wx.navigateTo({url: '/pages/broadcast/main'})
               } else {
-                console.log('我没有权限',res)
+                console.log('我没有权限', res)
                 wx.navigateTo({url: '/pages/counter/main'})
               }
             }

@@ -15,7 +15,7 @@
             <p> {{item.disc}}:</p>
             <input type="number" class="small text" v-model=" item['value']">
           </div>
-          <input class="button" type="button" value="完成" v-on:click="()=>handleSubmit(item)"/>
+          <input class="button" type="button" value="确定" v-on:click="()=>handleSubmit(item)"/>
         </div>
       </li>
     </ul>
