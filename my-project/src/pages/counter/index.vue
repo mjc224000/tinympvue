@@ -1,8 +1,21 @@
 <template>
   <div class="counter-warp">
+   <div class="public-wrap" v-if="firstMessage"  v-on:click="()=>handleShowMessage(firstMessage)">
+     <div class="top" >
+       <div class="left">
+         <p style="color:#313131;font-size: 28rpx;font-weight: bold;" >
+         <span style=" background-color: #f33431;"> {{firstMessage.index}}</span>  {{firstMessage.title}}</p>
+       </div>
+       <div class="right">{{firstMessage.time}}></div>
+
+   </div>
+     <div class="content">
+     <p class="message">{{firstMessage.subMessage}}</p>
+   </div>
+   </div>
     <ul style="border:8rpx bisque dashed ;font-size: 40rpx;margin-bottom: 100rpx">
       <li v-for="item in msgList" :key="item">
-        <p>{{item}}</p>
+        <p style="text-align: left">{{item}}</p>
       </li>
     </ul>
 
@@ -34,15 +47,13 @@
 
   export default {
     data: {
-      from: 0,
-      to: 0,
-      queueNumber: null,
+      queueNumber: 0,
       isShow: false
     },
     computed: {
       remain() {
-        let {from, to, queueNumber} = this;
-        console.log(from, to, queueNumber)
+        let {from, to} = store.state.vars;
+      let queueNumber=this.queueNumber;
         if (queueNumber < +from) {
           return '您已过号，请咨询开单室';
         }
@@ -60,9 +71,15 @@
           return '请及时办理装车业务。'
         }
       },
+      firstMessage(){
+        let item =store.state.messageList[0];
+       let time=new Date( item.time )  ;
+       let span=new Date()-new Date(time);
+        return span> 1000*60*60*24?undefined:store.state.messageList[0]
+      },
       msgList() {
-        let templates = store.state.templates;
-        let vars = store.state.vars;
+        let templates = store.state.templates||[];
+        let vars = store.state.vars||[];
         return templates.map((tpl) => {
           let s= compose(tpl.content, vars);
           console.log(s);
@@ -81,8 +98,13 @@
           return
         }
         this.isShow = !this.isShow;
+      },
+      handleShowMessage(item){
+        let {title,message,time}=item;
+        wx.navigateTo({
+          url: `/pages/showMessage/main?title=${title}&message=${message}&time=${time}`
+        })
       }
-
     },
     onShow() {
       store.commit('getVars');
@@ -101,33 +123,39 @@
     text-align: center;
     margin-top: 1 rpx !important;
   }
-
+  .top {
+       font-size: 40rpx;
+       margin-bottom: 10rpx;
+       overflow: hidden;
+     }
+  .right{
+    text-align: right;
+    font-size: 24rpx;
+    color:#aaa;
+    float: right;
+  }
+  .public-wrap{
+    width: 90%;
+    margin: auto;
+    border-radius: 15rpx ;
+    background-color: #e9e9e9;
+    margin: 120rpx  auto ;
+    margin-bottom: 50rpx;
+  }
   .remain {
     display: flex;
     align-items: center;
     justify-content: space-around;
   }
-
+  .content{
+    text-indent: 60rpx;
+    color:#666;
+    display: flex;
+    font-size: 32rpx;
+  }
   .remain button {
     flex-basis: 30%;
   }
 
-  .text span {
-    font-size: 160 rpx;
-    background-image: -webkit-linear-gradient(92deg, #f35626, #feab3a);
-    -webkit-text-fill-color: transparent;
-    -webkit-background-clip: text;
-    -webkit-animation: hue 30s infinite linear;
-    font-weight: bold;
-  }
 
-  @keyframes hue {
-    0% {
-      -webkit-filter: hue-rotate(0deg);
-    }
-
-    100% {
-      -webkit-filter: hue-rotate(360deg);
-    }
-  }
 </style>

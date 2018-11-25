@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '@/config';
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -11,56 +12,54 @@ const store = new Vuex.Store({
     token: null,
     from: 0,
     to: 0,
-    messageList:[],
-    vars:[],
-    templates:[]
+    messageList: [],
+    vars: [],
+    templates: []
   },
   mutations: {
 
-   getVars(state){
-     wx.request({
-       url:config.statistic+'/vars',
-       success(res){
-         state.vars=res.data;
-       }
-     })
+    getVars(state) {
+      wx.request({
+        url: config.statistic + '/vars',
+        success(res) {
+          state.vars = res.data;
+        }
+      })
 
-   }
-    ,
-    getTemplates(state){
-     wx.request({
-       url:config.statistic+'/templates',
-       success(res){
-     console.log(res.data,'templates');
-     state.templates=res.data;
-       }
-     })
     }
-  ,
+    ,
+    getTemplates(state) {
+      wx.request({
+        url: config.statistic + '/templates',
+        success(res) {
+          console.log(res.data, 'templates');
+          state.templates = res.data;
+        }
+      })
+    }
+    ,
     auth(state, stark) {
       state.auth = true;
       state.token = stark;
     },
-    updateMessageList(state,stark){
-      state.messageList=stark;
+    updateMessageList(state, stark) {
+      state.messageList = stark;
     },
-    refresh(state){
+    refresh(state) {
       wx.request({
         url: config.messageList,
-        headers:{
-
-        },
+        headers: {},
         success(res) {
           let list = res.data;
           list.forEach((v, i) => {
-            v.index=i+1;
-            v.subMessage=v.message.substring(0,45);
-            v.title=v.title.substring(0,20);
-            if(v.subMessage.length===45){
-              v.subMessage=v.subMessage+'...';
+            v.index = i + 1;
+            v.subMessage = v.message.substring(0, 45);
+            v.title = v.title.substring(0, 20);
+            if (v.subMessage.length === 45) {
+              v.subMessage = v.subMessage + '...';
             }
           })
-          state.messageList=list;
+          state.messageList = list;
         }
       })
     }

@@ -125,9 +125,7 @@
     margin-bottom: 10rpx;
     overflow: hidden;
   }
-  .public{
 
-  }
  ul{
    margin-top: 50rpx;
  }
@@ -181,8 +179,6 @@ text-align: center;
   height: 300rpx;
   overflow: hidden;
 }
-  .top div {
-  }
 
   .right {
     text-align: right;
@@ -196,11 +192,7 @@ text-align: center;
   display: flex;
   font-size: 32rpx;
 }
-.content .wlcolor{
-}
-.content .message{
 
-}
   .selected{
     transform: translateX(-225rpx);
 

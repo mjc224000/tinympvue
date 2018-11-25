@@ -5,7 +5,7 @@ router.use(function timeLog(req, res, next) {
 })
 router.get('/', function (req, res) {
     let {Vars} = req.models;
-    Vars.find({isshow:true}, function (err, docs) {
+    Vars.find({}, function (err, docs) {
         if (err) {
             console.log(err);
             res.send('not ok')
@@ -18,7 +18,7 @@ router.get('/', function (req, res) {
     let {type, disc, symbol,} = data;
     let {Vars} = req.models;
     if (Vars && type) {
-        Vars.create({type, disc, symbol,latest_value: 0}, function (err) {
+        Vars.create({type, disc, symbol, latest_value: 0, isshow: true}, function (err) {
             console.log(err);
             if (!err) {
                 res.send('ok');
@@ -29,7 +29,7 @@ router.get('/', function (req, res) {
     }
 }).put("/", function (req, res) {
     let data = req.body;
-    let {type, varId, disc,symbol,isshow,} = data;
+    let {type, varId, disc, symbol, isshow,} = data;
     console.log(isshow);
     let {Vars} = req.models;
     if (Vars && type && disc) {
@@ -41,7 +41,7 @@ router.get('/', function (req, res) {
             docs[0].type = type;
             docs[0].disc = disc;
             docs[0].symbol = symbol;
-            docs[0].isshow=isshow;
+            docs[0].isshow = isshow;
             docs[0].save();
             res.send('ok');
         })

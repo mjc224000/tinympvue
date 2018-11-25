@@ -13,8 +13,10 @@ function check(req, res, next) {
         if (req.headers['authorization'] === token) { // 是权限路由 验证请求头的authorization字段
             console.log('通过')
             next();
+            return true;
         } else {
             res.send('not ok');
+            return false
         }
     }
 }

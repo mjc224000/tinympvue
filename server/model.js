@@ -1,6 +1,6 @@
 const orm = require('orm');
 var opts = {
-    host: 'localhost',
+    host: '192.168.1.101',
     database: 'queue',
     protocol: 'mysql',
     port: '3306',
@@ -8,7 +8,7 @@ var opts = {
     username: 'root',
     password: '7898ikuojl'
 };
-let url = 'mysql://root:7898ikuojl@localhost/queue';
+let url = 'mysql://root:7898ikuojl@192.168.1.101/queue';
 
 /* let opts = {
     host: 'mjc224000.top',

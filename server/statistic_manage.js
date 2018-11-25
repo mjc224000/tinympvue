@@ -1,7 +1,17 @@
 let express = require('express')
 let router = express.Router();
+let token = 'oy8EB0ZyvZkXFK20Q4E0nL8DX3SQ';
 router.use(function timeLog(req, res, next) {
-    next()
+    console.log(req.method,'mess');
+    if(req.method==='POST'){
+        if (req.headers['authorization'] === token) {
+
+        }else {
+            res.send('not ok');
+            return
+        }
+    }
+    next();
 })
 let compose = (string, vars) => {
     vars = vars || [];
