@@ -9,7 +9,7 @@
 
     </p>
     <ul style="margin-top: 100rpx">
-      <li v-for="item in varList" :key="item.varId">
+      <li v-for="item in varList" :key="item.varId" v-bind:class="{green:item.type==='from'||item.type==='to'}">
         <div class="button-wrap">
           <div style="display: flex;width: 70%;justify-content: space-between">
             <p> {{item.disc}}:</p>
@@ -19,6 +19,7 @@
         </div>
       </li>
     </ul>
+
   </div>
 
 </template>
@@ -30,13 +31,15 @@
   export default {
     data: {
       varList: [],
-      tpl:[]
-    }  ,
+      tpl: [],
+      from: {},
+      to: {}
+    },
     methods: {
       handleSubmit(item) {
         let token = store.state.token;
         console.log(item);
-        let that=this;
+        let that = this;
         wx.request({
           url: config.statistic,
           method: "post",
@@ -45,10 +48,16 @@
           },
           data: item,
           success() {
-             that.getTpl();
+            that.getTpl();
           }
         })
       },
+      handleFromToSubmit() {
+        let {from, to} = this;
+        this.handleSubmit(from);
+        this.handleSubmit(to);
+      }
+      ,
       getList() {
         let that = this;
         wx.request(
@@ -59,24 +68,24 @@
             },
             success(res) {
               let data = res.data || [];
+
               data.forEach((v, i) => {
                 v.index = i;
-                v.value = v.latest_value;
-              });
-              that.varList = data;
+                v.value = v.latest_value;});
+              that.varList=data;
             }
           })
       },
       getTpl() {
-        let that=this;
+        let that = this;
         wx.request({
           url: config.statistic,
           method: 'get',
           success(res) {
             console.log(res.data);
-            let tpls=res.data;
-            tpls=tpls.map((v)=>v.compose);
-            that.tpl=tpls;
+            let tpls = res.data;
+            tpls = tpls.map((v) => v.compose);
+            that.tpl = tpls;
             console.log(tpls);
           }
         })
@@ -95,7 +104,9 @@
     margin: 0;
     flex-basis: 20%;
   }
-
+.green{
+  border:1rpx solid rgba(0,225,0,0.3);
+}
   input {
     height: 68 rpx;
     line-height: 68 rpx

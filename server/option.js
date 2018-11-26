@@ -4,8 +4,11 @@ const fs = require('fs');
     cert = fs.readFileSync('./openssl/215073622990525.pem');*/
 
 // 阿里云
-let key = fs.readFileSync('./openssl/1531319468158.key'),
-    cert = fs.readFileSync('./openssl/1531319468158.pem');
+/*let key = fs.readFileSync('./openssl/1531319468158.key'),
+    cert = fs.readFileSync('./openssl/1531319468158.pem');*/
+// 百度云
+let key = fs.readFileSync('./openssl/1551667_bds.mjc224000.top.key'),
+    cert = fs.readFileSync('./openssl/1551667_bds.mjc224000.top.pem');
 module.exports = {
     key: key,
     cert: cert,

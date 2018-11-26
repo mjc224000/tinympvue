@@ -1,7 +1,7 @@
 function message(req, res) {
     let messageModel = req.models.message
     let {message, title} = req.query;
-    messageModel.create({message, title, time: new Date()}, function (err) {
+    messageModel.create({message, title, time: new Date(),enable:true}, function (err) {
         if (!err) {
             res.send('created')
         } else {
@@ -39,7 +39,7 @@ function deleteMessage(req, res) {
         }
         let msg = doc[0];
         if (msg) {
-            msg.enable = 1;
+            msg.enable = false;
             msg.save(function (err) {
                 if (err) return;
                 res.send('ok');
@@ -50,7 +50,7 @@ function deleteMessage(req, res) {
 
 function messageList(req, res) {
     let {message} = req.models;
-    message.find({}, function (err, docs) {
+    message.find({enable:true}, function (err, docs) {
         if (!err) {
             docs = docs.map(v => {
                 v.time = new Date(v.time).toLocaleString();

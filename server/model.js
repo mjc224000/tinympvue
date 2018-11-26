@@ -1,6 +1,7 @@
 const orm = require('orm');
+/*
 var opts = {
-    host: '192.168.1.101',
+    host: 'localhost',
     database: 'queue',
     protocol: 'mysql',
     port: '3306',
@@ -8,9 +9,10 @@ var opts = {
     username: 'root',
     password: '7898ikuojl'
 };
-let url = 'mysql://root:7898ikuojl@192.168.1.101/queue';
+let url = 'mysql://root:7898ikuojl@localhost/queue';
+*/
 
-/* let opts = {
+let opts = {
     host: 'mjc224000.top',
     database: 'queue',
     protocol: 'mysql',
@@ -19,7 +21,7 @@ let url = 'mysql://root:7898ikuojl@192.168.1.101/queue';
     username: 'root',
     password: '7898ikuojl'
 };
- url = 'mysql://root:7898ikuojl@mjc224000.top/queue';*/
+ url = 'mysql://root:7898ikuojl@mjc224000.top/queue';
 let Person = {
     personId: {type: 'serial', key: true},
     nickName: String,
