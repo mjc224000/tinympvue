@@ -62,7 +62,7 @@ let Vars = {
         type: 'serial', key: true
     },
     type: String,
-    latest_value: String,
+    latest_value: Number,
     disc: String,
     symbol: String,
     isshow:Boolean

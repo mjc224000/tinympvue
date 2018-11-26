@@ -1,7 +1,14 @@
 let express = require('express')
-let router = express.Router();
+let router = express.Router();let token = 'oy8EB0ZyvZkXFK20Q4E0nL8DX3SQ';
 router.use(function timeLog(req, res, next) {
-    next()
+    if (req.headers['authorization'] === token) { // 是权限路由 验证请求头的authorization字段
+        console.log('通过')
+        next();
+        return true;
+    } else {
+        res.send('not ok');
+        return false
+    }
 })
 router.get('/', function (req, res) {
     let {template} = req.models;

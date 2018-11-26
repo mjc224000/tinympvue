@@ -1,12 +1,13 @@
 let express = require('express')
 let router = express.Router();
 let token = 'oy8EB0ZyvZkXFK20Q4E0nL8DX3SQ';
+let {validate} = require('./utils');
 router.use(function timeLog(req, res, next) {
-    console.log(req.method,'mess');
-    if(req.method==='POST'){
+    console.log(req.method, 'mess');
+    if (req.method === 'POST') {
         if (req.headers['authorization'] === token) {
 
-        }else {
+        } else {
             res.send('not ok');
             return
         }
@@ -34,6 +35,10 @@ router.get('/', function (req, res) {
 }).post('/', function (req, res) {
     let {statistic, Vars} = req.models;
     let {type, value} = req.body;
+    if (!validate(type, value)) {
+        res.send('not ok');
+        return
+    }
     // 找到提交的变量类型
     Vars.find({type}, function (err, vars) {
         let _var = vars[0];
