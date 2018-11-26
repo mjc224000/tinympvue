@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:3001/';
+//axios.defaults.baseURL = 'http://localhost:3001/';
+axios.defaults.baseURL = 'https://bds.mjc224000.top/';
 axios.defaults.withCredentials = false;
 
 axios.interceptors.request.use(function (e) {

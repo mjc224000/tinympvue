@@ -23,6 +23,7 @@ const store = new Vuex.Store({
         url: config.statistic + '/vars',
         success(res) {
           state.vars = res.data;
+          console.log('get vars',res.data);
         }
       })
 
@@ -32,7 +33,7 @@ const store = new Vuex.Store({
       wx.request({
         url: config.statistic + '/templates',
         success(res) {
-          console.log(res.data, 'templates');
+          console.log('tpls');
           state.templates = res.data;
         }
       })

@@ -1,26 +1,29 @@
 <template>
   <div class="counter-warp">
-   <div class="public-wrap" v-if="firstMessage"  v-on:click="()=>handleShowMessage(firstMessage)">
-     <div class="top" >
-       <div class="left">
-         <p style="color:#313131;font-size: 28rpx;font-weight: bold;" >
-         <span style=" background-color: #f33431;"> {{firstMessage.index}}</span>  {{firstMessage.title}}</p>
-       </div>
-       <div class="right">{{firstMessage.time}}></div>
+    <div style="min-height: 200rpx">
+      <div class="public-wrap" v-if="firstMessage"  v-on:click="()=>handleShowMessage(firstMessage)">
+        <div class="top" >
+          <div class="left">
+            <p style="color:#313131;font-size: 28rpx;font-weight: bold;" >
+              <span style=" background-color: #f33431;padding: 5rpx;"> {{firstMessage.index}}</span>  {{firstMessage.title}}</p>
+          </div>
+          <div class="right">{{firstMessage.time}}></div>
 
-   </div>
-     <div class="content">
-     <p class="message">{{firstMessage.subMessage}}</p>
-   </div>
-   </div>
-    <ul style="border:8rpx bisque dashed ;font-size: 40rpx;margin-bottom: 100rpx">
-      <li v-for="item in msgList" :key="item">
-        <p style="text-align: left">{{item}}</p>
+        </div>
+        <div class="content">
+          <p class="message">{{firstMessage.subMessage}}</p>
+        </div>
+      </div>
+    </div>
+
+    <ul style="border:8rpx bisque dashed ;font-size: 40rpx;margin-bottom: 100rpx;color:white" v-bind:class="rolldownList">
+      <li v-for="item in msgList" :key="item.msg" v-bind:style="{animationDelay:item.delay}">
+        <p style="text-align: left">{{item.msg}}</p>
       </li>
     </ul>
 
     <div class="estimate">
-      <div v-if="isShow" class="remain">
+      <div v-if="isShow" class="remain">L
         <div class="right">{{remain}}</div>
         <button v-on:click="handleToggle" class="">返回</button>
       </div>
@@ -48,7 +51,9 @@
   export default {
     data: {
       queueNumber: 0,
-      isShow: false
+      isShow: false,
+      rolldownList:''
+
     },
     computed: {
       remain() {
@@ -57,7 +62,7 @@
         if (queueNumber < +from) {
           return '您已过号，请咨询开单室';
         }
-        if (queueNumber > to) {
+        if (queueNumber > +to) {
           console.log(typeof queueNumber, typeof to);
           let remain = (queueNumber - to) * 60 / 16;
           let hours = parseInt(remain / 60);
@@ -73,6 +78,7 @@
       },
       firstMessage(){
         let item =store.state.messageList[0];
+        if(!item)return undefined;
        let time=new Date( item.time )  ;
        let span=new Date()-new Date(time);
         return span> 1000*60*60*24?undefined:store.state.messageList[0]
@@ -80,10 +86,10 @@
       msgList() {
         let templates = store.state.templates||[];
         let vars = store.state.vars||[];
-        return templates.map((tpl) => {
+        return templates.map((tpl,i) => {
           let s= compose(tpl.content, vars);
-          console.log(s);
-          return s
+
+          return {msg:s,delay:i*0.4+'s'};
         })
       }
     }
@@ -109,11 +115,13 @@
     onShow() {
       store.commit('getVars');
       store.commit('getTemplates');
+    setTimeout(()=>this.rolldownList='rolldown-list',500)
     },
+  onHide(){
+      this.rolldownList='';
+  },
     created() {
-
-      setTimeout(() => store.commit('getVars'), 1000);
-
+      setInterval(() => store.commit('getVars'), 6000);
     }
   }
 </script>
@@ -122,6 +130,38 @@
   .counter-warp {
     text-align: center;
     margin-top: 1 rpx !important;
+  }
+  .rolldown-list li:nth-child(2n) {
+    background-color: #444;
+  }
+  .rolldown-list li:nth-child(2n+1) {
+    background-color: #333;
+  }
+  .rolldown-list li{
+    padding: 25rpx;
+    margin-bottom: 10rpx;
+    display: block;
+    list-style: none;
+  }
+  .rolldown-list li {
+    visibility: hidden;
+    animation: rolldown .7s 1;
+    transform-origin: 50% 0;
+    animation-fill-mode: forwards;
+  }
+  @keyframes rolldown {
+    0% {
+      visibility: visible;
+      transform: rotateX(180deg) perspective(500px);
+    }
+    70% {
+      visibility: visible;
+      transform: rotateX(-20deg);
+    }
+    100% {
+      visibility: visible;
+      transform: rotateX(0deg);
+    }
   }
   .top {
        font-size: 40rpx;

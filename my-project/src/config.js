@@ -1,6 +1,7 @@
 
 //let url = 'https://mjc224000.top/';
-let url='https://localhost/'
+// let url='https://localhost/'
+let url='https://bds.mjc224000.top/'
 export default {
   auth: url + 'auth',
   wss: 'wss://mjc224000.top',
